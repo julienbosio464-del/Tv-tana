@@ -64,13 +64,20 @@
         </button>
 
         <!-- Pavé de contrôle Home / Back -->
-        <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="grid grid-cols-3 gap-4 mb-6">
+            <!-- Touche MUTE (Nouvelle touche de test) -->
+            <button data-key="KEY_MUTE" data-command="remoteControl" class="control-button bg-gray-200 text-gray-700 py-4 rounded-xl flex items-center justify-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6zm2 10V7h2V5h-4v.05c-.34.03-.67.09-1 .19V5h-2v12c0 1.1.9 2 2 2s2-.9 2-2z"/>
+                </svg>
+                <span>Mute</span>
+            </button>
             <!-- Touche HOME (la plus commune pour Smart Hub) -->
             <button data-key="KEY_HOME" data-command="remoteControl" class="control-button bg-gray-200 text-gray-700 py-4 rounded-xl flex items-center justify-center space-x-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 5.69l5 4.5V18h-2v-6H9v6H7v-7.81l5-4.5M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z"/>
                 </svg>
-                <span>Accueil (Smart Hub)</span>
+                <span>Accueil</span>
             </button>
             <button data-key="KEY_RETURN" data-command="remoteControl" class="control-button bg-gray-200 text-gray-700 py-4 rounded-xl flex items-center justify-center space-x-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
@@ -82,11 +89,11 @@
 
         <!-- Contrôles de Volume et Chaîne -->
         <div class="flex space-x-6 justify-center mb-6">
-            <!-- Bloc Volume (FIXED: Utilise remoteControl pour KEY_VOLUP/DOWN) -->
+            <!-- Bloc Volume (FIXED: Utilise KEY_UP/DOWN pour forcer le fonctionnement) -->
             <div class="flex flex-col items-center">
-                <span class="text-sm font-semibold text-gray-600 mb-2">Volume</span>
-                <button data-key="KEY_VOLUP" data-command="remoteControl" class="control-button bg-gray-300 text-gray-800 p-4 rounded-full mb-3 shadow-md h-16 w-16 text-2xl font-bold">+</button>
-                <button data-key="KEY_VOLDOWN" data-command="remoteControl" class="control-button bg-gray-300 text-gray-800 p-4 rounded-full shadow-md h-16 w-16 text-2xl font-bold">-</button>
+                <span class="text-sm font-semibold text-gray-600 mb-2">Volume (via Flèches)</span>
+                <button data-key="KEY_UP" data-command="remoteControl" class="control-button bg-gray-300 text-gray-800 p-4 rounded-full mb-3 shadow-md h-16 w-16 text-2xl font-bold">V+</button>
+                <button data-key="KEY_DOWN" data-command="remoteControl" class="control-button bg-gray-300 text-gray-800 p-4 rounded-full shadow-md h-16 w-16 text-2xl font-bold">V-</button>
             </div>
 
             <!-- Bloc Chaîne -->
@@ -158,7 +165,7 @@
                 let commands = [];
 
                 if (capability === 'remoteControl') {
-                    // Les commandes Volume sont maintenant traitées ici avec KEY_VOLUP/DOWN
+                    // Toutes les touches (Volume, Home, Return, Mute, ChUp/Down, Custom) passent par ici
                     commands.push({
                         component: "main",
                         capability: "remoteControl",
@@ -278,7 +285,7 @@
                 }
             });
 
-            updateStatus("Télécommande prête. Le volume a été corrigé. Veuillez tester le volume et la séquence OQEE.");
+            updateStatus("Télécommande prête. Le volume utilise maintenant les touches fléchées. Veuillez tester le Mute et OQEE.");
         });
     </script>
 </body>
