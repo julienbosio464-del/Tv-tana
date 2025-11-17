@@ -63,22 +63,23 @@
             <span>LANCER FREE TV (OQEE)</span>
         </button>
 
-        <!-- Pavé de contrôle Home / Back -->
+        <!-- Pavé de contrôle Home / Back / Mute -->
         <div class="grid grid-cols-3 gap-4 mb-6">
-            <!-- Touche MUTE (Non fonctionnelle) -->
+            <!-- Touche MUTE (On revient à la standard KEY_MUTE) -->
             <button data-key="KEY_MUTE" data-command="remoteControl" class="control-button bg-gray-200 text-gray-700 py-4 rounded-xl flex items-center justify-center space-x-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6zm2 10V7h2V5h-4v.05c-.34.03-.67.09-1 .19V5h-2v12c0 1.1.9 2 2 2s2-.9 2-2z"/>
                 </svg>
-                <span>Mute (Test)</span>
+                <span>Mute</span>
             </button>
-            <!-- Touche HOME (la plus commune pour Smart Hub) -->
+            <!-- Touche HOME (Smart Hub) -->
             <button data-key="KEY_HOME" data-command="remoteControl" class="control-button bg-gray-200 text-gray-700 py-4 rounded-xl flex items-center justify-center space-x-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 5.69l5 4.5V18h-2v-6H9v6H7v-7.81l5-4.5M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z"/>
                 </svg>
                 <span>Accueil</span>
             </button>
+            <!-- Touche Retour -->
             <button data-key="KEY_RETURN" data-command="remoteControl" class="control-button bg-gray-200 text-gray-700 py-4 rounded-xl flex items-center justify-center space-x-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 4l-1.41 1.41L15.17 11H4v2h11.17l-4.58 4.59L12 20l8-8-8-8z"/>
@@ -89,11 +90,11 @@
 
         <!-- Contrôles de Volume et Chaîne -->
         <div class="flex space-x-6 justify-center mb-6">
-            <!-- Bloc Volume (Utilise KEY_UP/DOWN pour forcer le fonctionnement) -->
+            <!-- Bloc Volume (Retour aux commandes standard KEY_VOLUP/VOLDOWN) -->
             <div class="flex flex-col items-center">
-                <span class="text-sm font-semibold text-gray-600 mb-2">Volume (via Flèches)</span>
-                <button data-key="KEY_UP" data-command="remoteControl" class="control-button bg-gray-300 text-gray-800 p-4 rounded-full mb-3 shadow-md h-16 w-16 text-2xl font-bold">V+</button>
-                <button data-key="KEY_DOWN" data-command="remoteControl" class="control-button bg-gray-300 text-gray-800 p-4 rounded-full shadow-md h-16 w-16 text-2xl font-bold">V-</button>
+                <span class="text-sm font-semibold text-gray-600 mb-2">Volume</span>
+                <button data-key="KEY_VOLUP" data-command="remoteControl" class="control-button bg-gray-300 text-gray-800 p-4 rounded-full mb-3 shadow-md h-16 w-16 text-2xl font-bold">+</button>
+                <button data-key="KEY_VOLDOWN" data-command="remoteControl" class="control-button bg-gray-300 text-gray-800 p-4 rounded-full shadow-md h-16 w-16 text-2xl font-bold">-</button>
             </div>
 
             <!-- Bloc Chaîne -->
@@ -115,9 +116,9 @@
         <!-- --- Outil de Debug des Commandes --- -->
         <div class="mt-8 pt-4 border-t border-gray-200">
             <h2 class="text-lg font-bold text-gray-700 mb-3">🛠️ Tester une Touche Manuelle</h2>
-            <p class="text-xs text-gray-500 mb-3 font-semibold text-red-600">IMPORTANT: Si OQEE ne se lance pas, ajustez le nombre de KEY_RIGHT (actuellement 3) dans le code (ligne 190) pour pointer sur l'application.</p>
+            <p class="text-xs text-gray-500 mb-3 font-semibold text-red-600">INSTRUCTIONS: Si la séquence OQEE ne fonctionne pas, utilisez cet outil pour déterminer le nombre de KEY_RIGHT nécessaire.</p>
             <div class="flex space-x-2">
-                <input type="text" id="custom-key-input" placeholder="Ex: KEY_RIGHT, KEY_MUTE, KEY_SMART" class="flex-grow p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                <input type="text" id="custom-key-input" placeholder="Ex: KEY_RIGHT, KEY_ENTER, KEY_INFO" class="flex-grow p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
                 <button id="send-custom-key" class="control-button bg-indigo-500 text-white px-4 py-2 rounded-lg font-semibold whitespace-nowrap">
                     Envoyer
                 </button>
@@ -135,10 +136,10 @@
             const sendCustomKeyButton = document.getElementById('send-custom-key');
             
             // ----------------------------------------------------
-            // --- CONFIGURATION CRITIQUE (Nouvelles clés) ---
+            // --- CONFIGURATION CRITIQUE (ID corrigé) ---
             // ----------------------------------------------------
             const SMARTTHINGS_TOKEN = "bb137cae-20ed-4295-87f3-4c45ff06ff1b"; 
-            const TV_DEVICE_ID = "f8e7557b-0efc-4a53-bb2c-6aa068ac1789";
+            const TV_DEVICE_ID = "a446a209-f9d7-7972-e908-a1a41eb7f093"; // NOUVEL ID
             const API_URL = `https://api.smartthings.com/v1/devices/${TV_DEVICE_ID}/commands`;
             // ----------------------------------------------------
 
@@ -165,7 +166,7 @@
                 let commands = [];
 
                 if (capability === 'remoteControl') {
-                    // Toutes les touches (Volume, Home, Return, Mute, ChUp/Down, Custom) passent par ici
+                    // Toutes les touches de télécommande passent par ici
                     commands.push({
                         component: "main",
                         capability: "remoteControl",
@@ -250,7 +251,7 @@
                 await sendSingleCommand('KEY_HOME', 'remoteControl', 'Touche HOME (Ouverture Smart Hub)');
                 await new Promise(resolve => setTimeout(resolve, 1500)); // Laisser le temps au Hub de s'afficher
 
-                // 2. Naviguer jusqu'à l'application OQEE (3 x KEY_RIGHT est une hypothèse)
+                // 2. Naviguer jusqu'à l'application OQEE (3 x KEY_RIGHT est l'hypothèse standard)
                 // MODIFIEZ CE NOMBRE DE '3' si OQEE est ailleurs sur le ruban.
                 const numSteps = 3; 
                 for (let i = 0; i < numSteps; i++) {
@@ -287,7 +288,7 @@
                 }
             });
 
-            updateStatus("Télécommande prête. Veuillez TESTER UNIQUEMENT le bouton ÉTEINDRE LA TV.");
+            updateStatus("Télécommande prête avec le nouvel ID. Veuillez tester ÉTEINDRE LA TV en priorité.");
         });
     </script>
 </body>
