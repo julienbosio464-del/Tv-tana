@@ -82,11 +82,11 @@
 
         <!-- Contrôles de Volume et Chaîne -->
         <div class="flex space-x-6 justify-center mb-6">
-            <!-- Bloc Volume -->
+            <!-- Bloc Volume (FIXED: Utilise remoteControl pour KEY_VOLUP/DOWN) -->
             <div class="flex flex-col items-center">
                 <span class="text-sm font-semibold text-gray-600 mb-2">Volume</span>
-                <button data-key="volumeUp" data-command="audioVolume" class="control-button bg-gray-300 text-gray-800 p-4 rounded-full mb-3 shadow-md h-16 w-16 text-2xl font-bold">+</button>
-                <button data-key="volumeDown" data-command="audioVolume" class="control-button bg-gray-300 text-gray-800 p-4 rounded-full shadow-md h-16 w-16 text-2xl font-bold">-</button>
+                <button data-key="KEY_VOLUP" data-command="remoteControl" class="control-button bg-gray-300 text-gray-800 p-4 rounded-full mb-3 shadow-md h-16 w-16 text-2xl font-bold">+</button>
+                <button data-key="KEY_VOLDOWN" data-command="remoteControl" class="control-button bg-gray-300 text-gray-800 p-4 rounded-full shadow-md h-16 w-16 text-2xl font-bold">-</button>
             </div>
 
             <!-- Bloc Chaîne -->
@@ -108,9 +108,9 @@
         <!-- --- Outil de Debug des Commandes --- -->
         <div class="mt-8 pt-4 border-t border-gray-200">
             <h2 class="text-lg font-bold text-gray-700 mb-3">🛠️ Tester une Touche Manuelle</h2>
-            <p class="text-xs text-gray-500 mb-3 font-semibold text-red-600">IMPORTANT: Si le bouton LANCER FREE TV n'ouvre pas OQEE, c'est que l'application est mal positionnée. Vous devrez ajuster le nombre de KEY_RIGHT dans le code (ligne 190 environ).</p>
+            <p class="text-xs text-gray-500 mb-3 font-semibold text-red-600">IMPORTANT: Si OQEE ne se lance pas, ajustez le nombre de KEY_RIGHT (actuellement 3) dans le code (ligne 190) pour pointer sur l'application.</p>
             <div class="flex space-x-2">
-                <input type="text" id="custom-key-input" placeholder="Ex: KEY_RIGHT, KEY_SMART" class="flex-grow p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                <input type="text" id="custom-key-input" placeholder="Ex: KEY_RIGHT, KEY_MUTE, KEY_SMART" class="flex-grow p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
                 <button id="send-custom-key" class="control-button bg-indigo-500 text-white px-4 py-2 rounded-lg font-semibold whitespace-nowrap">
                     Envoyer
                 </button>
@@ -130,7 +130,6 @@
             // ----------------------------------------------------
             // --- CONFIGURATION CRITIQUE (Nouvelles clés) ---
             // ----------------------------------------------------
-            // Jeton d'accès et ID de l'appareil mis à jour pour le téléviseur Samsung Crystal
             const SMARTTHINGS_TOKEN = "bb137cae-20ed-4295-87f3-4c45ff06ff1b"; 
             const TV_DEVICE_ID = "f8e7557b-0efc-4a53-bb2c-6aa068ac1789";
             const API_URL = `https://api.smartthings.com/v1/devices/${TV_DEVICE_ID}/commands`;
@@ -159,17 +158,12 @@
                 let commands = [];
 
                 if (capability === 'remoteControl') {
+                    // Les commandes Volume sont maintenant traitées ici avec KEY_VOLUP/DOWN
                     commands.push({
                         component: "main",
                         capability: "remoteControl",
                         command: "send",
                         arguments: [key]
-                    });
-                } else if (capability === 'audioVolume') {
-                    commands.push({
-                        component: "main",
-                        capability: "audioVolume",
-                        command: key 
                     });
                 } else if (capability === 'switch') {
                      commands.push({
@@ -208,7 +202,6 @@
                         const delay = initialDelay * Math.pow(2, attempt);
                         await new Promise(resolve => setTimeout(resolve, delay));
                         if (attempt === maxRetries - 1) {
-                            // Si c'est la dernière tentative, ne pas loguer l'attente
                             break;
                         }
                     }
@@ -250,7 +243,8 @@
                 await new Promise(resolve => setTimeout(resolve, 1500)); // Laisser le temps au Hub de s'afficher
 
                 // 2. Naviguer jusqu'à l'application OQEE (3 x KEY_RIGHT est une hypothèse)
-                const numSteps = 3; // MODIFIEZ CE NOMBRE si l'application n'est pas trouvée
+                // MODIFIEZ CE NOMBRE DE '3' si OQEE est ailleurs sur le ruban.
+                const numSteps = 3; 
                 for (let i = 0; i < numSteps; i++) {
                     await sendSingleCommand('KEY_RIGHT', 'remoteControl', `Navigation droite (${i + 1}/${numSteps})`);
                     await new Promise(resolve => setTimeout(resolve, 500)); 
@@ -284,7 +278,7 @@
                 }
             });
 
-            updateStatus("Télécommande prête pour le Samsung Crystal. Testez 'LANCER FREE TV (OQEE)' !");
+            updateStatus("Télécommande prête. Le volume a été corrigé. Veuillez tester le volume et la séquence OQEE.");
         });
     </script>
 </body>
