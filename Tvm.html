@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Télécommande OQEE TV</title>
+    <title>Télécommande OQEE TV Complète v2</title>
     <!-- Chargement de Tailwind CSS pour un style moderne et responsive sur mobile -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -22,6 +22,7 @@
         .control-card {
             background: linear-gradient(145deg, #ffffff, #f0f4f8);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15), 0 5px 15px rgba(0, 0, 0, 0.05);
+            max-width: 400px;
         }
         .control-button {
             transition: all 0.15s ease-in-out;
@@ -34,236 +35,193 @@
         }
         
         /* STYLE : Bouton TV/Lancement App (Bleu) */
-        .app-launch-button-small {
+        .app-launch-button-style {
             background-color: #3B82F6; /* Bleu Vif */
             color: white;
             font-weight: 700;
-            font-size: 1rem; 
-            height: 48px;
+            font-size: 1.5rem; 
+            height: 70px;
             box-shadow: 0 6px 15px -3px rgba(59, 130, 246, 0.4);
             letter-spacing: 0.05em;
         }
-        .app-launch-button-small:active {
+        .app-launch-button-style:active {
              background-color: #2563EB;
         }
 
         /* STYLE : Bouton Allumer (Vert) */
-        .power-on-style {
-            background-color: #10B981; /* Vert Émeraude */
-            color: white;
-            font-weight: 600;
-        }
-        .power-on-style:active {
-             background-color: #059669;
-        }
-        
-        /* STYLE : Bouton Éteindre (Rouge) */
-        .power-off-style {
-            background-color: #EF4444; /* Rouge Vif */
-            color: white;
-            font-weight: 600;
-        }
-        .power-off-style:active {
-             background-color: #DC2626;
-        }
+        .power-on-style { background-color: #10B981; color: white; font-weight: 600; }
+        .power-off-style { background-color: #EF4444; color: white; font-weight: 600; }
 
-        /* STYLE : Boutons numériques (Taille réduite) */
-        .num-button {
-            background-color: #f9fafb; /* Très clair */
-            color: #1f2937; /* Noir */
-            font-weight: 700;
-            font-size: 1.2rem; 
-            height: 50px; 
-        }
-        .num-button:active {
-            background-color: #e5e7eb;
-        }
+        /* STYLE : Boutons Numériques et Flèches */
+        .num-button { background-color: #f9fafb; color: #1f2937; font-weight: 700; font-size: 1.2rem; height: 50px; }
+        .channel-button { background-color: #e0e7ff; color: #4338ca; font-weight: 700; font-size: 1.1rem; height: 50px; }
 
-        /* NOUVEAU STYLE : Boutons CH+ et CH- */
-        .channel-button {
-            background-color: #e0e7ff; /* Indigo pâle */
-            color: #4338ca; /* Indigo foncé */
-            font-weight: 700;
-            font-size: 1.1rem;
-            height: 50px;
-        }
-        .channel-button:active {
-            background-color: #c7d2fe;
-        }
-
-        /* STYLE : Boutons Volume (Jaune) */
-        .volume-button {
-             background-color: #fcd34d; /* Jaune doux */
-             color: #4b5563;
-             font-weight: bold;
-             height: 50px;
-        }
-        .volume-button:active {
-             background-color: #fbbf24;
-        }
-
-        /* NOUVEAU STYLE : Boutons Volume Ronds */
-        .round-volume-button {
-             width: 70px;
-             height: 70px;
-             border-radius: 9999px; /* rounded-full */
-             display: flex;
-             flex-direction: column;
-             align-items: center;
-             justify-content: center;
+        /* STYLE : Boutons Volume (Ronds) */
+        .round-button {
+             width: 70px; height: 70px; border-radius: 9999px;
+             display: flex; flex-direction: column; align-items: center; justify-content: center;
              padding: 4px;
         }
-        .volume-symbol {
-            font-size: 1.8rem;
-            line-height: 1;
+        .volume-button {
+             background-color: #fcd34d; /* Jaune doux */
+             color: #4b5563; font-weight: bold;
         }
-        .volume-label {
-            font-size: 0.75rem; /* text-xs */
-            font-weight: 700;
-            margin-top: -2px;
-        }
+        .volume-button:active { background-color: #fbbf24; }
 
-        /* STYLE : Touches Essentielles (5 petits boutons, icônes) */
-        .essential-button {
-            background-color: #ffffff;
-            color: #374151; /* Gris foncé */
-            font-size: 1.1rem;
-            height: 40px; /* Taille réduite */
-            padding-top: 8px; /* py-2 */
-            padding-bottom: 8px; /* py-2 */
+        /* STYLE : D-Pad (Navigation) */
+        .dpad-container {
+            width: 150px; height: 150px; display: grid;
+            grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(3, 1fr);
+            gap: 1px; margin: 0 auto;
         }
-        .essential-button:active {
-            background-color: #f3f4f6;
+        .dpad-button {
+            background-color: #ffffff; color: #374151; font-size: 1.1rem;
+            display: flex; align-items: center; justify-content: center; border: 1px solid #d1d5db;
         }
+        .dpad-center {
+            background-color: #3B82F6; color: white; font-weight: bold; font-size: 1.2rem;
+        }
+        .dpad-center:active { background-color: #2563EB; }
         
-        .loading {
-            cursor: not-allowed;
-            opacity: 0.6;
-            pointer-events: none;
+        /* STYLE : Touches Essentielles */
+        .essential-button {
+            background-color: #ffffff; color: #374151; font-size: 1.1rem; height: 40px; 
+            padding-top: 8px; padding-bottom: 8px; 
         }
-        .alert-info {
-            background-color: #fef3c7; /* Jaune très clair */
-            color: #b45309; /* Marron foncé */
-            border: 1px solid #fbbf24;
-            padding: 8px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 0.85rem;
-            margin-bottom: 1rem;
+        .essential-button:active { background-color: #f3f4f6; }
+
+        .loading {
+            cursor: not-allowed; opacity: 0.6; pointer-events: none;
         }
     </style>
 </head>
 <body class="selection:bg-indigo-200">
-    <div id="app-container" class="w-full max-w-sm control-card p-8 rounded-3xl border border-gray-200">
+    <div id="app-container" class="w-full control-card p-6 rounded-3xl border border-gray-200">
         
-        <!-- Avertissement pour le test de saisie de texte -->
-        <div class="alert-info">
-            Test : les boutons **numériques** utilisent maintenant la fonction de saisie de texte (`setKeyInputString`). Appuyez sur **OK** (qui fait maintenant `KEY_ENTER`) pour valider une chaîne.
-        </div>
-
         <!-- 1. Boutons Power et Lancement TV -->
-        <div class="flex justify-between items-center mb-8 space-x-3">
-            <!-- Bouton Allumer (Vert) -->
-            <button id="power-on-btn" 
-                    data-key="on" 
-                    data-capability="switch" 
-                    class="control-button power-on-style w-1/3 py-3 rounded-xl text-base flex items-center justify-center space-x-1">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M13 3h-2v10h2V3zM12 11c-4.411 0-8 3.589-8 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zm0 14c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z"/>
-                </svg>
-                <span>ON</span>
-            </button>
-            
+        <div class="flex flex-col space-y-4 mb-8">
             <!-- Bouton Lancement Direct OQEE (TV - Bleu) -->
             <button id="launch-oqee-btn" 
                     data-app-id="znCs95n93Q.OqeeTV" 
                     data-capability="custom.launchapp" 
-                    class="control-button app-launch-button-small w-1/3 rounded-xl flex items-center justify-center">
-                <span class="text-lg font-extrabold">TV</span> 
+                    class="control-button app-launch-button-style w-full rounded-2xl flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-2" viewBox="0 0 24 24" fill="currentColor"><path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-10 11H9v2H7v-6h4v2zm5-2h-2V9h-2v2h-2v2h2v2h2v-2h2v-2z"/></svg>
+                <span>Lancer OQEE TV</span> 
             </button>
+            
+            <div class="flex justify-between space-x-4">
+                <!-- Bouton Allumer (Vert) -->
+                <button id="power-on-btn" 
+                        data-key="on" 
+                        data-capability="switch" 
+                        class="control-button power-on-style w-1/2 rounded-2xl flex items-center justify-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M13 3h-2v10h2V3zM12 11c-4.411 0-8 3.589-8 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zm0 14c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z"/>
+                    </svg>
+                    <span>ON</span>
+                </button>
 
-            <!-- Bouton Éteindre (Rouge) -->
-            <button id="power-off-btn" 
-                    data-key="off" 
-                    data-capability="switch" 
-                    class="control-button power-off-style w-1/3 py-3 rounded-xl text-base flex items-center justify-center space-x-1">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M13 3h-2v10h2V3zM12 11c-4.411 0-8 3.589-8 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zm0 14c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z"/>
-                </svg>
-                <span>OFF</span>
-            </button>
+                <!-- Bouton Éteindre (Rouge) -->
+                <button id="power-off-btn" 
+                        data-key="off" 
+                        data-capability="switch" 
+                        class="control-button power-off-style w-1/2 rounded-2xl flex items-center justify-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M13 3h-2v10h2V3zM12 11c-4.411 0-8 3.589-8 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zm0 14c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z"/>
+                    </svg>
+                    <span>OFF</span>
+                </button>
+            </div>
         </div>
         
-        <!-- 2. Commandes Numériques (0-9) + CH+/- -->
+        <!-- 2. Commandes de Volume / Chaîne / Mute -->
+        <div class="flex justify-between items-start mb-8 space-x-4">
+            <!-- Contrôle Volume (Utilise audioVolume.volumeUp/Down) -->
+            <div class="flex flex-col space-y-2 w-1/3">
+                <button data-command="volumeUp" data-capability="audioVolume" class="control-button volume-button round-button">
+                    <span class="text-2xl">+</span>
+                    <span class="text-xs font-bold -mt-1">Volume</span>
+                </button>
+                <button data-command="volumeDown" data-capability="audioVolume" class="control-button volume-button round-button">
+                    <span class="text-2xl">-</span>
+                    <span class="text-xs font-bold -mt-1">Volume</span>
+                </button>
+            </div>
+
+            <!-- D-Pad (Navigation : Tente avec remoteControl.sendKey) -->
+            <div class="dpad-container">
+                <div class="dpad-button invisible"></div>
+                <button data-key="KEY_UP" data-capability="remoteControl" class="dpad-button rounded-t-xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M7 14l5-5 5 5z"/></svg>
+                </button>
+                <div class="dpad-button invisible"></div>
+
+                <button data-key="KEY_LEFT" data-capability="remoteControl" class="dpad-button rounded-l-xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M14 7l-5 5 5 5z"/></svg>
+                </button>
+                <button data-key="KEY_ENTER" data-capability="remoteControl" class="dpad-button dpad-center">OK</button>
+                <button data-key="KEY_RIGHT" data-capability="remoteControl" class="dpad-button rounded-r-xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M10 17l5-5-5-5z"/></svg>
+                </button>
+
+                <div class="dpad-button invisible"></div>
+                <button data-key="KEY_DOWN" data-capability="remoteControl" class="dpad-button rounded-b-xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
+                </button>
+                <div class="dpad-button invisible"></div>
+            </div>
+
+            <!-- Contrôle Chaîne (Tente avec remoteControl.sendKey) -->
+            <div class="flex flex-col space-y-2 w-1/3">
+                 <button data-key="KEY_CHUP" data-capability="remoteControl" class="control-button channel-button round-button">
+                    <span class="text-2xl">CH+</span>
+                 </button>
+                 <button data-key="KEY_CHDOWN" data-capability="remoteControl" class="control-button channel-button round-button">
+                    <span class="text-2xl">CH-</span>
+                 </button>
+            </div>
+        </div>
+
+        <!-- 3. Touches Numériques (Tente avec remoteControl.sendKey) -->
         <div class="grid grid-cols-3 gap-3 mb-8">
-            <!-- Les numéros utilisent maintenant la capacité KEY_INPUT -->
-            <button data-key="1" data-capability="keyInput" class="control-button num-button rounded-xl py-3">1</button>
-            <button data-key="2" data-capability="keyInput" class="control-button num-button rounded-xl py-3">2</button>
-            <button data-key="3" data-capability="keyInput" class="control-button num-button rounded-xl py-3">3</button>
+            <button data-key="KEY_1" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">1</button>
+            <button data-key="KEY_2" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">2</button>
+            <button data-key="KEY_3" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">3</button>
             
-            <button data-key="4" data-capability="keyInput" class="control-button num-button rounded-xl py-3">4</button>
-            <button data-key="5" data-capability="keyInput" class="control-button num-button rounded-xl py-3">5</button>
-            <button data-key="6" data-capability="keyInput" class="control-button num-button rounded-xl py-3">6</button>
+            <button data-key="KEY_4" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">4</button>
+            <button data-key="KEY_5" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">5</button>
+            <button data-key="KEY_6" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">6</button>
             
-            <button data-key="7" data-capability="keyInput" class="control-button num-button rounded-xl py-3">7</button>
-            <button data-key="8" data-capability="keyInput" class="control-button num-button rounded-xl py-3">8</button>
-            <button data-key="9" data-capability="keyInput" class="control-button num-button rounded-xl py-3">9</button>
+            <button data-key="KEY_7" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">7</button>
+            <button data-key="KEY_8" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">8</button>
+            <button data-key="KEY_9" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">9</button>
             
-            <!-- CH- et CH+ reviennent à la méthode minimaliste KEY_X, qui est la seule option restante -->
-            <button data-key="KEY_CHDOWN" data-capability="remoteControl" class="control-button channel-button rounded-xl py-3 flex items-center justify-center">
-                CH-
-            </button>
-            
-            <!-- 0 -->
-            <button data-key="0" data-capability="keyInput" class="control-button num-button rounded-xl py-3">0</button>
-            
-            <!-- CH+ -->
-            <button data-key="KEY_CHUP" data-capability="remoteControl" class="control-button channel-button rounded-xl py-3 flex items-center justify-center">
-                CH+
-            </button>
-        </div>
-
-        <!-- 3. Commandes de Volume (Rondes) -->
-        <div class="flex justify-center items-center mb-8 space-x-12">
-            <!-- Les volumes restent sur la méthode minimaliste KEY_X -->
-            <button data-key="KEY_VOLDOWN" data-capability="remoteControl" 
-                    class="control-button volume-button round-volume-button">
-                <span class="volume-symbol">-</span>
-                <span class="volume-label">Volume</span>
-            </button>
-            
-            <!-- Volume OK/Enter pour valider la saisie de texte -->
-            <button data-key="KEY_ENTER" data-capability="remoteControl" 
-                    class="control-button app-launch-button-small round-volume-button">
-                <span class="volume-symbol text-white">OK</span>
-                <span class="volume-label text-white">Enter</span>
-            </button>
-
-            <!-- Volume Plus (+) -->
-            <button data-key="KEY_VOLUP" data-capability="remoteControl" 
-                    class="control-button volume-button round-volume-button">
-                <span class="volume-symbol">+</span>
-                <span class="volume-label">Volume</span>
-            </button>
-        </div>
-        
-        <!-- 4. Touches Essentielles (5 boutons, icônes seulement) -->
-        <div class="flex justify-between items-center mb-4 space-x-2">
-            <!-- Ces touches restent sur la méthode minimaliste KEY_X -->
-            <button data-key="KEY_RETURN" data-capability="remoteControl" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
+            <!-- Touches spéciales pour l'alignement -->
+            <button data-key="KEY_RETURN" data-capability="remoteControl" class="control-button channel-button rounded-xl py-3 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H7V9h4V5l6 6-6 6z"/></svg>
             </button>
-            <button data-key="KEY_HOME" data-capability="remoteControl" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
+            
+            <button data-key="KEY_0" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">0</button>
+            
+            <button data-key="KEY_HOME" data-capability="remoteControl" class="control-button channel-button rounded-xl py-3 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5.69l5-4.5V3h3v2h-2l-1-1v10h2v2h-3v-2l-1-1v-4L12 5.69zM12 3L2 12h3v8h14v-8h3L12 3z"/></svg>
             </button>
+        </div>
+        
+        <!-- 4. Touches Essentielles (Menu, REC, Mute, etc.) -->
+        <div class="flex justify-between items-center space-x-2">
             <button data-key="KEY_MENU" data-capability="remoteControl" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
             </button>
+            <button data-key="KEY_INFO" data-capability="remoteControl" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            </button>
+            <!-- Bouton Mute (Utilise audioMute.mute) -->
+            <button data-command="mute" data-capability="audioMute" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .9-.22 1.74-.63 2.5l1.63 1.63c.66-1.09 1.05-2.35 1.05-3.63 0-4.31-3.52-7.9-7.84-7.9-.55 0-1.07.09-1.57.24l2.12 2.12c.31-.05.63-.08.95-.08 2.07 0 3.75 1.68 3.75 3.75zm-9.98 0l-4.42-4.42-1.41 1.41L5 12l-1.41 1.41 1.41 1.41 4.42-4.42zM5 12h2v.5h-2z"/></svg>
+            </button>
             <button data-key="KEY_REC" data-capability="remoteControl" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9"/></svg>
-            </button>
-            <button data-key="KEY_MUTE" data-capability="remoteControl" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .9-.22 1.74-.63 2.5l1.63 1.63c.66-1.09 1.05-2.35 1.05-3.63 0-4.31-3.52-7.9-7.84-7.9-.55 0-1.07.09-1.57.24l2.12 2.12c.31-.05.63-.08.95-.08 2.07 0 3.75 1.68 3.75 3.75zm-9.98 0l-4.42-4.42-1.41 1.41L5 12l-1.41 1.41 1.41 1.41 4.42-4.42zM5 12h2v.5h-2z"/></svg>
             </button>
         </div>
         
@@ -278,7 +236,7 @@
             const statusMessage = document.getElementById('status-message');
             
             // Collecte de tous les boutons de commande
-            const controlButtons = document.querySelectorAll('.control-button[data-key], .app-launch-button-small');
+            const controlButtons = document.querySelectorAll('.control-button[data-key], .control-button[data-command], .app-launch-button-style');
 
             // --- CONFIGURATION FINALE ---
             const SMARTTHINGS_TOKEN = "a3722370-c705-4739-8709-eef82c298ce2"; 
@@ -360,7 +318,8 @@
                 button.addEventListener('click', () => {
                     if (isSendingCommand) return;
                     
-                    const key = button.getAttribute('data-key');
+                    const key = button.getAttribute('data-key'); // Pour les touches (remoteControl)
+                    const command = button.getAttribute('data-command'); // Pour les commandes (audioVolume/Mute)
                     const capability = button.getAttribute('data-capability');
                     let commands;
                     let description;
@@ -389,32 +348,29 @@
                             arguments: [appId]
                         }];
                     }
-                    // 3. Saisie Numérique (custom.keyinput) - Test pour les numéros 0-9
-                    else if (capability === "keyInput") {
-                         description = `Saisie du chiffre '${key}'`;
-                         
-                         commands = [{
+                    // 3. Commandes Audio Officielles (audioVolume, audioMute)
+                    else if (capability === "audioVolume" || capability === "audioMute") {
+                        description = `Commande ${capability}.${command}`;
+                        commands = [{
                             component: "main",
-                            capability: "custom.keyinput", 
-                            command: "setKeyInputString", 
-                            arguments: [key] // Envoie le chiffre comme argument de la fonction setKeyInputString
+                            capability: capability, 
+                            command: command, 
+                            arguments: []
                         }];
-                        
-                        console.log("Key Input Payload:", JSON.stringify(commands));
                     }
-                    // 4. Remote Control (Clé comme commande elle-même - Solution Minimaliste)
+                    // 4. Remote Control (Clé comme commande - Test Final)
                     else if (capability === "remoteControl" && key.startsWith("KEY_")) {
                          description = `Touche '${key.substring(4)}'`;
                          
-                         // On utilise le nom de la clé comme commande
+                         // Test final avec la méthode sendKey officielle de l'API SmartThings
                          commands = [{
                             component: "main",
                             capability: "remoteControl", 
-                            command: key, // Ex: "KEY_VOLUP" devient la commande
-                            arguments: []
+                            command: "sendKey",
+                            arguments: [key]
                         }];
                         
-                        console.log("Minimalist Remote Control Payload:", JSON.stringify(commands));
+                        console.log("Remote Control Final Payload:", JSON.stringify(commands));
                     }
                     
                     if (commands) {
