@@ -32,57 +32,65 @@
             transform: translateY(1px);
             box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
         }
-        /* Nouveau style pour le bouton TV/Lancement App (Vert) */
+        
+        /* STYLE : Bouton TV/Lancement App (Bleu) */
         .app-launch-button-small {
-            background-color: #10B981; /* Vert émeraude */
+            background-color: #3B82F6; /* Bleu Vif */
             color: white;
             font-weight: 700;
             font-size: 1rem; 
             height: 48px;
-            box-shadow: 0 6px 15px -3px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 6px 15px -3px rgba(59, 130, 246, 0.4);
             letter-spacing: 0.05em;
         }
         .app-launch-button-small:active {
+             background-color: #2563EB;
+        }
+
+        /* STYLE : Bouton Allumer (Vert) */
+        .power-on-style {
+            background-color: #10B981; /* Vert Émeraude */
+            color: white;
+            font-weight: 600;
+        }
+        .power-on-style:active {
              background-color: #059669;
         }
-        /* Style pour tous les boutons d'alimentation (on/off) */
-        .power-button-style {
+        
+        /* STYLE : Bouton Éteindre (Rouge) */
+        .power-off-style {
             background-color: #EF4444; /* Rouge Vif */
             color: white;
             font-weight: 600;
         }
-        .power-button-style:active {
+        .power-off-style:active {
              background-color: #DC2626;
         }
-        /* Style des boutons numériques */
+
+        /* STYLE : Boutons numériques (Taille réduite) */
         .num-button {
             background-color: #f9fafb; /* Très clair */
             color: #1f2937; /* Noir */
             font-weight: 700;
-            font-size: 1.4rem;
-            height: 60px;
+            font-size: 1.2rem; /* Taille de police réduite */
+            height: 50px; /* Hauteur réduite */
         }
         .num-button:active {
             background-color: #e5e7eb;
         }
-        .directional-button {
+
+        /* STYLE : Touches Essentielles (Retour, Accueil) */
+        .essential-button {
             background-color: #ffffff;
             color: #374151; /* Gris foncé */
             font-size: 1.1rem;
             height: 50px;
         }
-        .directional-button:active {
+        .essential-button:active {
             background-color: #f3f4f6;
         }
-        .ok-button {
-             background-color: #3b82f6; /* Bleu Vif */
-             color: white;
-             font-weight: bold;
-             height: 60px;
-        }
-        .ok-button:active {
-             background-color: #2563eb;
-        }
+        
+        /* STYLE : Boutons Volume (Jaune) */
         .volume-button {
              background-color: #fcd34d; /* Jaune doux */
              color: #4b5563;
@@ -102,36 +110,31 @@
 <body class="selection:bg-indigo-200">
     <div id="app-container" class="w-full max-w-sm control-card p-8 rounded-3xl border border-gray-200">
         
-        <!-- Zone de messages d'état (minimaliste) -->
-        <div id="status-message" class="bg-indigo-100 text-indigo-800 p-4 rounded-xl text-center mb-8 text-sm font-medium border border-indigo-200">
-            Prêt.
-        </div>
-        
-        <!-- NOUVELLE DISPOSITION : Allumer | TV (Vert) | Éteindre -->
+        <!-- 1. Boutons Power et Lancement TV -->
         <div class="flex justify-between items-center mb-8 space-x-3">
-            <!-- Bouton Allumer (1/3) -->
+            <!-- Bouton Allumer (Vert) -->
             <button id="power-on-btn" 
                     data-key="on" 
                     data-capability="switch" 
-                    class="control-button power-button-style w-1/3 py-3 rounded-xl text-base flex items-center justify-center space-x-1">
+                    class="control-button power-on-style w-1/3 py-3 rounded-xl text-base flex items-center justify-center space-x-1">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M13 3h-2v10h2V3zM12 11c-4.411 0-8 3.589-8 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zm0 14c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z"/>
                 </svg>
                 <span>ON</span>
             </button>
             
-            <!-- Bouton Lancement Direct OQEE (TV) (1/3) -->
+            <!-- Bouton Lancement Direct OQEE (TV - Bleu) -->
             <button id="launch-oqee-btn" 
                     data-app-id="znCs95n93Q.OqeeTV" 
                     class="control-button app-launch-button-small w-1/3 rounded-xl flex items-center justify-center">
                 <span class="text-lg font-extrabold">TV</span> 
             </button>
 
-            <!-- Bouton Éteindre (1/3) -->
+            <!-- Bouton Éteindre (Rouge) -->
             <button id="power-off-btn" 
                     data-key="off" 
                     data-capability="switch" 
-                    class="control-button power-button-style w-1/3 py-3 rounded-xl text-base flex items-center justify-center space-x-1">
+                    class="control-button power-off-style w-1/3 py-3 rounded-xl text-base flex items-center justify-center space-x-1">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M13 3h-2v10h2V3zM12 11c-4.411 0-8 3.589-8 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zm0 14c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z"/>
                 </svg>
@@ -139,7 +142,7 @@
             </button>
         </div>
         
-        <!-- 3. Commandes Numériques (0-9) - Juste en dessous du pavé ON/TV/OFF -->
+        <!-- 2. Commandes Numériques (0-9) - Taille réduite -->
         <div class="grid grid-cols-3 gap-3 mb-8">
             <button data-key="1" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">1</button>
             <button data-key="2" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">2</button>
@@ -158,34 +161,7 @@
             <div class="col-span-1"></div> <!-- Espace vide à droite de 0 -->
         </div>
 
-
-        <!-- 4. Commandes de Navigation (D-Pad) -->
-        <div class="flex justify-center mb-8">
-            <div class="grid grid-cols-3 gap-2 w-48">
-                <!-- Haut -->
-                <button data-key="UP" data-capability="remoteControl" class="col-start-2 control-button directional-button rounded-xl">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L6 8h12z"/></svg>
-                </button>
-                <!-- Gauche -->
-                <button data-key="LEFT" data-capability="remoteControl" class="col-start-1 control-button directional-button rounded-xl">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20l-8-8 8-8v4h8v8h-8z"/></svg>
-                </button>
-                <!-- OK/Enter -->
-                <button data-key="ENTER" data-capability="remoteControl" class="control-button ok-button rounded-xl">
-                    OK
-                </button>
-                <!-- Droite -->
-                <button data-key="RIGHT" data-capability="remoteControl" class="col-start-3 control-button directional-button rounded-xl">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto" viewBox="0 0 24 24" fill="currentColor"><path d="M14 20l8-8-8-8v4H6v8h8z"/></svg>
-                </button>
-                <!-- Bas -->
-                <button data-key="DOWN" data-capability="remoteControl" class="col-start-2 control-button directional-button rounded-xl">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22l6-6H6z"/></svg>
-                </button>
-            </div>
-        </div>
-
-        <!-- 5. Commandes de Volume -->
+        <!-- 3. Commandes de Volume -->
         <div class="flex justify-between items-center mb-8 space-x-4">
             <!-- Bouton Muet (Mute) -->
             <button data-key="MUTE" data-capability="audioVolume" class="control-button volume-button w-1/3 py-3 rounded-xl flex items-center justify-center space-x-1 text-base">
@@ -208,18 +184,23 @@
             </button>
         </div>
         
-        <!-- 6. Touches Essentielles (Home/Retour) -->
+        <!-- 4. Touches Essentielles (Home/Retour) -->
         <div class="flex justify-between items-center mb-4 space-x-4">
             <!-- Bouton Retour -->
-            <button data-key="BACK" data-capability="remoteControl" class="control-button directional-button w-1/2 py-3 rounded-xl flex items-center justify-center space-x-2">
+            <button data-key="BACK" data-capability="remoteControl" class="control-button essential-button w-1/2 py-3 rounded-xl flex items-center justify-center space-x-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H7V9h4V5l6 6-6 6z"/></svg>
                 <span>Retour</span>
             </button>
             <!-- Bouton Accueil (Home) -->
-            <button data-key="HOME" data-capability="remoteControl" class="control-button directional-button w-1/2 py-3 rounded-xl flex items-center justify-center space-x-2">
+            <button data-key="HOME" data-capability="remoteControl" class="control-button essential-button w-1/2 py-3 rounded-xl flex items-center justify-center space-x-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5.69l5-4.5V3h3v2h-2l-1-1v10h2v2h-3v-2l-1-1v-4L12 5.69zM12 3L2 12h3v8h14v-8h3L12 3z"/></svg>
                 <span>Accueil</span>
             </button>
+        </div>
+        
+        <!-- ENCART DE STATUT EN BAS -->
+        <div id="status-message" class="bg-indigo-100 text-indigo-800 p-3 rounded-xl text-center text-sm font-medium border border-indigo-200 mt-4">
+            Prêt.
         </div>
     </div>
 
@@ -254,8 +235,7 @@
 
             // Fonction de mise à jour du statut, simplifiée pour ne montrer que le message
             function updateStatus(message, isError = false) {
-                statusMessage.className = `p-4 rounded-xl text-center mb-8 text-sm font-medium border ${isError ? 'bg-red-100 text-red-800 border-red-300' : 'bg-indigo-100 text-indigo-800 border-indigo-300'}`;
-                // Suppression de l'heure et de la mention "Bienvenue"
+                statusMessage.className = `p-3 rounded-xl text-center text-sm font-medium border ${isError ? 'bg-red-100 text-red-800 border-red-300' : 'bg-indigo-100 text-indigo-800 border-indigo-300'} mt-4`;
                 statusMessage.innerHTML = message;
                 console.log(message);
             }
@@ -323,7 +303,7 @@
                 sendCommand(commands, "Lancement OQEE TV", LONG_THROTTLE_DELAY_MS);
             });
             
-            // --- Gestion des commandes dynamiques (Power, Volume, Navigation, Numérique) ---
+            // --- Gestion des commandes dynamiques (Power, Volume, Numérique, Essentiel) ---
             controlButtons.forEach(button => {
                 // S'assurer que les boutons sont bien ceux de commande (hors le bouton TV qui est géré séparément)
                 if (button.id === 'launch-oqee-btn') return; 
@@ -351,7 +331,7 @@
                         description = `Contrôle Volume (${key.split('_')[1] || 'Mute'})`;
                         argumentsArray = []; 
                     } 
-                    // Cas général : Remote Control (Navigation, Home, Back, Numérique)
+                    // Cas général : Remote Control (Numérique, Home, Back)
                     else if (capability === "remoteControl") {
                          description = (key.length === 1 && !isNaN(parseInt(key))) ? `Changement de chaîne: ${key}` : `Navigation '${key}'`;
                     }
