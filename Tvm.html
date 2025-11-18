@@ -141,11 +141,26 @@
             opacity: 0.6;
             pointer-events: none;
         }
+        .alert-info {
+            background-color: #fef3c7; /* Jaune très clair */
+            color: #b45309; /* Marron foncé */
+            border: 1px solid #fbbf24;
+            padding: 8px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
     </style>
 </head>
 <body class="selection:bg-indigo-200">
     <div id="app-container" class="w-full max-w-sm control-card p-8 rounded-3xl border border-gray-200">
         
+        <!-- Avertissement pour le test de saisie de texte -->
+        <div class="alert-info">
+            Test : les boutons **numériques** utilisent maintenant la fonction de saisie de texte (`setKeyInputString`). Appuyez sur **OK** (qui fait maintenant `KEY_ENTER`) pour valider une chaîne.
+        </div>
+
         <!-- 1. Boutons Power et Lancement TV -->
         <div class="flex justify-between items-center mb-8 space-x-3">
             <!-- Bouton Allumer (Vert) -->
@@ -181,26 +196,26 @@
         
         <!-- 2. Commandes Numériques (0-9) + CH+/- -->
         <div class="grid grid-cols-3 gap-3 mb-8">
-            <!-- NOTE IMPORTANTE: capability=remoteControl et key=KEY_X. En JS, le 'key' est utilisé comme 'command'. -->
-            <button data-key="KEY_1" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">1</button>
-            <button data-key="KEY_2" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">2</button>
-            <button data-key="KEY_3" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">3</button>
+            <!-- Les numéros utilisent maintenant la capacité KEY_INPUT -->
+            <button data-key="1" data-capability="keyInput" class="control-button num-button rounded-xl py-3">1</button>
+            <button data-key="2" data-capability="keyInput" class="control-button num-button rounded-xl py-3">2</button>
+            <button data-key="3" data-capability="keyInput" class="control-button num-button rounded-xl py-3">3</button>
             
-            <button data-key="KEY_4" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">4</button>
-            <button data-key="KEY_5" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">5</button>
-            <button data-key="KEY_6" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">6</button>
+            <button data-key="4" data-capability="keyInput" class="control-button num-button rounded-xl py-3">4</button>
+            <button data-key="5" data-capability="keyInput" class="control-button num-button rounded-xl py-3">5</button>
+            <button data-key="6" data-capability="keyInput" class="control-button num-button rounded-xl py-3">6</button>
             
-            <button data-key="KEY_7" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">7</button>
-            <button data-key="KEY_8" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">8</button>
-            <button data-key="KEY_9" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">9</button>
+            <button data-key="7" data-capability="keyInput" class="control-button num-button rounded-xl py-3">7</button>
+            <button data-key="8" data-capability="keyInput" class="control-button num-button rounded-xl py-3">8</button>
+            <button data-key="9" data-capability="keyInput" class="control-button num-button rounded-xl py-3">9</button>
             
-            <!-- CH- -->
+            <!-- CH- et CH+ reviennent à la méthode minimaliste KEY_X, qui est la seule option restante -->
             <button data-key="KEY_CHDOWN" data-capability="remoteControl" class="control-button channel-button rounded-xl py-3 flex items-center justify-center">
                 CH-
             </button>
             
             <!-- 0 -->
-            <button data-key="KEY_0" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">0</button>
+            <button data-key="0" data-capability="keyInput" class="control-button num-button rounded-xl py-3">0</button>
             
             <!-- CH+ -->
             <button data-key="KEY_CHUP" data-capability="remoteControl" class="control-button channel-button rounded-xl py-3 flex items-center justify-center">
@@ -210,14 +225,21 @@
 
         <!-- 3. Commandes de Volume (Rondes) -->
         <div class="flex justify-center items-center mb-8 space-x-12">
-            <!-- Bouton Volume Moins (-) -->
+            <!-- Les volumes restent sur la méthode minimaliste KEY_X -->
             <button data-key="KEY_VOLDOWN" data-capability="remoteControl" 
                     class="control-button volume-button round-volume-button">
                 <span class="volume-symbol">-</span>
                 <span class="volume-label">Volume</span>
             </button>
             
-            <!-- Bouton Volume Plus (+) -->
+            <!-- Volume OK/Enter pour valider la saisie de texte -->
+            <button data-key="KEY_ENTER" data-capability="remoteControl" 
+                    class="control-button app-launch-button-small round-volume-button">
+                <span class="volume-symbol text-white">OK</span>
+                <span class="volume-label text-white">Enter</span>
+            </button>
+
+            <!-- Volume Plus (+) -->
             <button data-key="KEY_VOLUP" data-capability="remoteControl" 
                     class="control-button volume-button round-volume-button">
                 <span class="volume-symbol">+</span>
@@ -227,29 +249,20 @@
         
         <!-- 4. Touches Essentielles (5 boutons, icônes seulement) -->
         <div class="flex justify-between items-center mb-4 space-x-2">
-            <!-- Bouton 1: Retour (BACK) -->
+            <!-- Ces touches restent sur la méthode minimaliste KEY_X -->
             <button data-key="KEY_RETURN" data-capability="remoteControl" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
-                <!-- Icône Retour (Flèche) -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H7V9h4V5l6 6-6 6z"/></svg>
             </button>
-            <!-- Bouton 2: Accueil (HOME) -->
             <button data-key="KEY_HOME" data-capability="remoteControl" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
-                <!-- Icône Accueil (Maison) -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5.69l5-4.5V3h3v2h-2l-1-1v10h2v2h-3v-2l-1-1v-4L12 5.69zM12 3L2 12h3v8h14v-8h3L12 3z"/></svg>
             </button>
-            <!-- Bouton 3: Menu (MENU) -->
             <button data-key="KEY_MENU" data-capability="remoteControl" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
-                <!-- Icône Menu (Liste) -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
             </button>
-            <!-- Bouton 4: Enregistrer (REC) -->
             <button data-key="KEY_REC" data-capability="remoteControl" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
-                <!-- Icône Enregistrer (Cercle Rouge) -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9"/></svg>
             </button>
-            <!-- Bouton 5: Mute (MUTE) -->
             <button data-key="KEY_MUTE" data-capability="remoteControl" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
-                <!-- Icône Muet -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .9-.22 1.74-.63 2.5l1.63 1.63c.66-1.09 1.05-2.35 1.05-3.63 0-4.31-3.52-7.9-7.84-7.9-.55 0-1.07.09-1.57.24l2.12 2.12c.31-.05.63-.08.95-.08 2.07 0 3.75 1.68 3.75 3.75zm-9.98 0l-4.42-4.42-1.41 1.41L5 12l-1.41 1.41 1.41 1.41 4.42-4.42zM5 12h2v.5h-2z"/></svg>
             </button>
         </div>
@@ -272,8 +285,6 @@
             const TV_DEVICE_ID = "a446a209-f9d7-7972-e908-a1a41eb7f093";
             const COMMAND_API_URL = `https://api.smartthings.com/v1/devices/${TV_DEVICE_ID}/commands`;
             // --- FIN CONFIGURATION ---
-
-            // Rappel important : Les commandes de télécommande ne fonctionnent que si la TV est allumée (ON).
 
             let isSendingCommand = false;
             const THROTTLE_DELAY_MS = 300; 
@@ -329,7 +340,6 @@
                     } else if (response.status === 429) {
                         updateStatus("Erreur 429 : Requêtes trop rapides. Veuillez réessayer dans quelques secondes.", true);
                     } else {
-                        // Tente de lire les données d'erreur pour un meilleur message
                         const errorData = await response.json().catch(() => ({ message: 'Réponse illisible ou vide.' }));
                         const detailedError = errorData.message || JSON.stringify(errorData) || 'Erreur inconnue.';
                         updateStatus(`${description} : ÉCHEC (Code ${response.status}). Détail : ${detailedError}`, true);
@@ -363,7 +373,7 @@
                         commands = [{
                             component: "main",
                             capability: "switch", 
-                            command: key, // 'on' ou 'off'
+                            command: key, 
                             arguments: []
                         }];
                     } 
@@ -379,7 +389,20 @@
                             arguments: [appId]
                         }];
                     }
-                    // 3. Remote Control (Clé comme commande elle-même - Solution Minimaliste)
+                    // 3. Saisie Numérique (custom.keyinput) - Test pour les numéros 0-9
+                    else if (capability === "keyInput") {
+                         description = `Saisie du chiffre '${key}'`;
+                         
+                         commands = [{
+                            component: "main",
+                            capability: "custom.keyinput", 
+                            command: "setKeyInputString", 
+                            arguments: [key] // Envoie le chiffre comme argument de la fonction setKeyInputString
+                        }];
+                        
+                        console.log("Key Input Payload:", JSON.stringify(commands));
+                    }
+                    // 4. Remote Control (Clé comme commande elle-même - Solution Minimaliste)
                     else if (capability === "remoteControl" && key.startsWith("KEY_")) {
                          description = `Touche '${key.substring(4)}'`;
                          
@@ -391,7 +414,6 @@
                             arguments: []
                         }];
                         
-                        // Debug: Afficher la commande envoyée en console
                         console.log("Minimalist Remote Control Payload:", JSON.stringify(commands));
                     }
                     
