@@ -181,43 +181,43 @@
         
         <!-- 2. Commandes Numériques (0-9) + CH+/- -->
         <div class="grid grid-cols-3 gap-3 mb-8">
-            <button data-key="1" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">1</button>
-            <button data-key="2" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">2</button>
-            <button data-key="3" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">3</button>
+            <button data-key="KEY_1" data-capability="custom.remotecontrol" class="control-button num-button rounded-xl py-3">1</button>
+            <button data-key="KEY_2" data-capability="custom.remotecontrol" class="control-button num-button rounded-xl py-3">2</button>
+            <button data-key="KEY_3" data-capability="custom.remotecontrol" class="control-button num-button rounded-xl py-3">3</button>
             
-            <button data-key="4" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">4</button>
-            <button data-key="5" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">5</button>
-            <button data-key="6" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">6</button>
+            <button data-key="KEY_4" data-capability="custom.remotecontrol" class="control-button num-button rounded-xl py-3">4</button>
+            <button data-key="KEY_5" data-capability="custom.remotecontrol" class="control-button num-button rounded-xl py-3">5</button>
+            <button data-key="KEY_6" data-capability="custom.remotecontrol" class="control-button num-button rounded-xl py-3">6</button>
             
-            <button data-key="7" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">7</button>
-            <button data-key="8" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">8</button>
-            <button data-key="9" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">9</button>
+            <button data-key="KEY_7" data-capability="custom.remotecontrol" class="control-button num-button rounded-xl py-3">7</button>
+            <button data-key="KEY_8" data-capability="custom.remotecontrol" class="control-button num-button rounded-xl py-3">8</button>
+            <button data-key="KEY_9" data-capability="custom.remotecontrol" class="control-button num-button rounded-xl py-3">9</button>
             
-            <!-- CH- (Test avec la clé alternative 'channelDown') -->
-            <button data-key="channelDown" data-capability="remoteControl" class="control-button channel-button rounded-xl py-3 flex items-center justify-center">
+            <!-- CH- (Passé en custom.remotecontrol.sendKey) -->
+            <button data-key="KEY_CHDOWN" data-capability="custom.remotecontrol" class="control-button channel-button rounded-xl py-3 flex items-center justify-center">
                 CH-
             </button>
             
             <!-- 0 -->
-            <button data-key="0" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">0</button>
+            <button data-key="KEY_0" data-capability="custom.remotecontrol" class="control-button num-button rounded-xl py-3">0</button>
             
-            <!-- CH+ (Test avec la clé alternative 'channelUp') -->
-            <button data-key="channelUp" data-capability="remoteControl" class="control-button channel-button rounded-xl py-3 flex items-center justify-center">
+            <!-- CH+ (Passé en custom.remotecontrol.sendKey) -->
+            <button data-key="KEY_CHUP" data-capability="custom.remotecontrol" class="control-button channel-button rounded-xl py-3 flex items-center justify-center">
                 CH+
             </button>
         </div>
 
         <!-- 3. Commandes de Volume (Rondes) -->
         <div class="flex justify-center items-center mb-8 space-x-12">
-            <!-- Bouton Volume Moins (-) (Test avec la clé alternative 'volDown') -->
-            <button data-key="volDown" data-capability="remoteControl" 
+            <!-- Bouton Volume Moins (-) (Passé en custom.remotecontrol.sendKey) -->
+            <button data-key="KEY_VOLDOWN" data-capability="custom.remotecontrol" 
                     class="control-button volume-button round-volume-button">
                 <span class="volume-symbol">-</span>
                 <span class="volume-label">Volume</span>
             </button>
             
-            <!-- Bouton Volume Plus (+) (Test avec la clé alternative 'volUp') -->
-            <button data-key="volUp" data-capability="remoteControl" 
+            <!-- Bouton Volume Plus (+) (Passé en custom.remotecontrol.sendKey) -->
+            <button data-key="KEY_VOLUP" data-capability="custom.remotecontrol" 
                     class="control-button volume-button round-volume-button">
                 <span class="volume-symbol">+</span>
                 <span class="volume-label">Volume</span>
@@ -227,27 +227,27 @@
         <!-- 4. Touches Essentielles (5 boutons, icônes seulement) -->
         <div class="flex justify-between items-center mb-4 space-x-2">
             <!-- Bouton 1: Retour (BACK) -->
-            <button data-key="BACK" data-capability="remoteControl" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
+            <button data-key="KEY_RETURN" data-capability="custom.remotecontrol" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
                 <!-- Icône Retour (Flèche) -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H7V9h4V5l6 6-6 6z"/></svg>
             </button>
             <!-- Bouton 2: Accueil (HOME) -->
-            <button data-key="HOME" data-capability="remoteControl" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
+            <button data-key="KEY_HOME" data-capability="custom.remotecontrol" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
                 <!-- Icône Accueil (Maison) -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5.69l5-4.5V3h3v2h-2l-1-1v10h2v2h-3v-2l-1-1v-4L12 5.69zM12 3L2 12h3v8h14v-8h3L12 3z"/></svg>
             </button>
-            <!-- Bouton 3: Menu (MENU) - À définir -->
-            <button data-key="MENU" data-capability="remoteControl" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
+            <!-- Bouton 3: Menu (MENU) -->
+            <button data-key="KEY_MENU" data-capability="custom.remotecontrol" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
                 <!-- Icône Menu (Liste) -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
             </button>
-            <!-- Bouton 4: Enregistrer (REC) - À définir -->
-            <button data-key="REC" data-capability="remoteControl" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
+            <!-- Bouton 4: Enregistrer (REC) -->
+            <button data-key="KEY_REC" data-capability="custom.remotecontrol" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
                 <!-- Icône Enregistrer (Cercle Rouge) -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9"/></svg>
             </button>
-            <!-- Bouton 5: Mute (MUTE) - Nouveau pour test -->
-            <button data-key="MUTE" data-capability="remoteControl" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
+            <!-- Bouton 5: Mute (MUTE) -->
+            <button data-key="KEY_MUTE" data-capability="custom.remotecontrol" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
                 <!-- Icône Muet -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .9-.22 1.74-.63 2.5l1.63 1.63c.66-1.09 1.05-2.35 1.05-3.63 0-4.31-3.52-7.9-7.84-7.9-.55 0-1.07.09-1.57.24l2.12 2.12c.31-.05.63-.08.95-.08 2.07 0 3.75 1.68 3.75 3.75zm-9.98 0l-4.42-4.42-1.41 1.41L5 12l-1.41 1.41 1.41 1.41 4.42-4.42zM5 12h2v.5h-2z"/></svg>
             </button>
@@ -377,20 +377,20 @@
                             arguments: [appId]
                         }];
                     }
-                    // 3. Remote Control (Tout le reste: Numéros, Volume, Chaînes, Retour, Home, Mute, etc.)
-                    else if (capability === "remoteControl") {
+                    // 3. Custom Remote Control (Solution de dernier recours pour les clés)
+                    else if (capability === "custom.remotecontrol") {
                          description = `Touche '${key}'`;
                          
-                         // On force la commande 'sendKey' avec le nom de la clé comme argument
+                         // On utilise custom.remotecontrol.sendKey
                          commands = [{
                             component: "main",
-                            capability: "remoteControl", 
+                            capability: "custom.remotecontrol", 
                             command: "sendKey", 
                             arguments: [key]
                         }];
                         
                         // Debug: Afficher la commande envoyée en console
-                        console.log("Remote Control Payload:", JSON.stringify(commands));
+                        console.log("Custom Remote Control Payload:", JSON.stringify(commands));
                     }
                     
                     if (commands) {
