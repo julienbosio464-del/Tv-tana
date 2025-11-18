@@ -162,6 +162,7 @@
             <!-- Bouton Lancement Direct OQEE (TV - Bleu) -->
             <button id="launch-oqee-btn" 
                     data-app-id="znCs95n93Q.OqeeTV" 
+                    data-capability="custom.launchapp" 
                     class="control-button app-launch-button-small w-1/3 rounded-xl flex items-center justify-center">
                 <span class="text-lg font-extrabold">TV</span> 
             </button>
@@ -192,31 +193,31 @@
             <button data-key="8" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">8</button>
             <button data-key="9" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">9</button>
             
-            <!-- CH- -->
-            <button data-key="CH_DOWN" data-capability="mediaChannel" class="control-button channel-button rounded-xl py-3 flex items-center justify-center">
+            <!-- CH- (Passé en remoteControl) -->
+            <button data-key="CH_DOWN" data-capability="remoteControl" class="control-button channel-button rounded-xl py-3 flex items-center justify-center">
                 CH-
             </button>
             
             <!-- 0 -->
             <button data-key="0" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">0</button>
             
-            <!-- CH+ -->
-            <button data-key="CH_UP" data-capability="mediaChannel" class="control-button channel-button rounded-xl py-3 flex items-center justify-center">
+            <!-- CH+ (Passé en remoteControl) -->
+            <button data-key="CH_UP" data-capability="remoteControl" class="control-button channel-button rounded-xl py-3 flex items-center justify-center">
                 CH+
             </button>
         </div>
 
         <!-- 3. Commandes de Volume (Rondes) -->
         <div class="flex justify-center items-center mb-8 space-x-12">
-            <!-- Bouton Volume Moins (-) -->
-            <button data-key="VOLUME_DOWN" data-capability="audioVolume" 
+            <!-- Bouton Volume Moins (-) (Passé en remoteControl) -->
+            <button data-key="VOLUME_DOWN" data-capability="remoteControl" 
                     class="control-button volume-button round-volume-button">
                 <span class="volume-symbol">-</span>
                 <span class="volume-label">Volume</span>
             </button>
             
-            <!-- Bouton Volume Plus (+) -->
-            <button data-key="VOLUME_UP" data-capability="audioVolume" 
+            <!-- Bouton Volume Plus (+) (Passé en remoteControl) -->
+            <button data-key="VOLUME_UP" data-capability="remoteControl" 
                     class="control-button volume-button round-volume-button">
                 <span class="volume-symbol">+</span>
                 <span class="volume-label">Volume</span>
@@ -261,8 +262,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const statusMessage = document.getElementById('status-message');
-            const powerOnBtn = document.getElementById('power-on-btn'); 
-            const powerOffBtn = document.getElementById('power-off-btn'); 
             const launchOqeeBtn = document.getElementById('launch-oqee-btn');
             
             // Collecte de tous les boutons de commande
@@ -271,17 +270,16 @@
             // --- CONFIGURATION FINALE ---
             const SMARTTHINGS_TOKEN = "a3722370-c705-4739-8709-eef82c298ce2"; 
             const TV_DEVICE_ID = "a446a209-f9d7-7972-e908-a1a41eb7f093";
-            const API_URL = `https://api.smartthings.com/v1/devices/${TV_DEVICE_ID}/commands`;
+            const COMMAND_API_URL = `https://api.smartthings.com/v1/devices/${TV_DEVICE_ID}/commands`;
             // --- FIN CONFIGURATION ---
+
+            // Rappel important : Les commandes remoteControl (numéros, volume, etc.) ne fonctionnent que si la TV est allumée (ON).
 
             let isSendingCommand = false;
             const THROTTLE_DELAY_MS = 300; 
             const LONG_THROTTLE_DELAY_MS = 1500; 
 
-            function setButtonDisabled(button, disabled) {
-                button.classList.toggle('loading', disabled);
-            }
-
+            // Fonction pour désactiver l'interface
             function setAllButtonsDisabled(disabled) {
                 controlButtons.forEach(btn => btn.classList.toggle('loading', disabled));
                 isSendingCommand = disabled;
@@ -294,6 +292,7 @@
                 console.log(message);
             }
 
+            // Fonction générale d'envoi de commande avec gestion des erreurs
             async function sendCommand(commands, description, throttleTime) {
                 updateStatus(`Envoi de l'action : ${description}...`);
                 setAllButtonsDisabled(true); 
@@ -304,7 +303,7 @@
                     const initialDelay = 1000;
                     
                     for (let attempt = 0; attempt < maxRetries; attempt++) {
-                        response = await fetch(API_URL, {
+                        response = await fetch(COMMAND_API_URL, {
                             method: 'POST',
                             headers: {
                                 'Authorization': `Bearer ${SMARTTHINGS_TOKEN}`,
@@ -344,66 +343,62 @@
                 }
             }
             
-            // --- Gestion des commandes de Lancement d'App ---
-            launchOqeeBtn.addEventListener('click', () => {
-                if (isSendingCommand) return;
-                const appId = launchOqeeBtn.getAttribute('data-app-id');
-                const commands = [{
-                    component: "main",
-                    capability: "custom.launchapp",
-                    command: "launchApp",
-                    arguments: [appId]
-                }];
-                sendCommand(commands, "Lancement OQEE TV", LONG_THROTTLE_DELAY_MS);
-            });
+            // --- GESTION DES COMMANDES ---
             
-            // --- Gestion des commandes dynamiques (Power, Volume, Numérique, Essentiel) ---
             controlButtons.forEach(button => {
-                // S'assurer que les boutons sont bien ceux de commande (hors le bouton TV qui est géré séparément)
-                if (button.id === 'launch-oqee-btn') return; 
-
                 button.addEventListener('click', () => {
                     if (isSendingCommand) return;
                     
                     const key = button.getAttribute('data-key');
                     const capability = button.getAttribute('data-capability');
-                    let command = "sendKey"; 
-                    let description = `Action '${key}'`;
+                    let commands;
+                    let description;
                     let throttleTime = THROTTLE_DELAY_MS;
-                    let argumentsArray = [key];
 
-                    // Cas particulier : Marche/Arrêt
+                    // 1. Marche/Arrêt (switch)
                     if (capability === "switch") {
-                        command = key; 
                         description = (key === 'on' ? "Allumer la TV" : "Éteindre la TV");
-                        argumentsArray = []; 
                         throttleTime = LONG_THROTTLE_DELAY_MS;
+                        commands = [{
+                            component: "main",
+                            capability: "switch", 
+                            command: key, // 'on' ou 'off'
+                            arguments: []
+                        }];
                     } 
-                    // Cas particulier : Volume
-                    else if (capability === "audioVolume") {
-                        command = key.toLowerCase().replace('_', '');
-                        description = `Contrôle Volume (${key === 'VOLUME_UP' ? '+' : '-'})`;
-                        argumentsArray = []; 
-                    } 
-                    // Cas particulier : Changement de Chaîne
-                    else if (capability === "mediaChannel") {
-                         command = key.toLowerCase().replace('_', '');
-                         description = `Changement de Chaîne (${key === 'CH_UP' ? 'Montée' : 'Descente'})`;
-                         argumentsArray = []; 
+                    // 2. Lancement d'App (custom.launchapp)
+                    else if (capability === "custom.launchapp") {
+                        const appId = button.getAttribute('data-app-id');
+                        description = "Lancement OQEE TV";
+                        throttleTime = LONG_THROTTLE_DELAY_MS;
+                        commands = [{
+                            component: "main",
+                            capability: "custom.launchapp",
+                            command: "launchApp",
+                            arguments: [appId]
+                        }];
                     }
-                    // Cas général : Remote Control (Numérique, Home, Back, Info, Menu, Rec)
+                    // 3. Remote Control (Tout le reste: Numéros, Volume, Chaînes, Retour, Home, etc.)
                     else if (capability === "remoteControl") {
                          description = (key.length === 1 && !isNaN(parseInt(key))) ? `Saisie numéro: ${key}` : `Action '${key}'`;
+                         
+                         // On force la commande 'sendKey' avec le nom de la clé comme argument
+                         commands = [{
+                            component: "main",
+                            capability: "remoteControl", 
+                            command: "sendKey", 
+                            arguments: [key]
+                        }];
+                        
+                        // Debug: Afficher la commande envoyée en console
+                        console.log("Remote Control Payload:", JSON.stringify(commands));
                     }
-
-                    const commands = [{
-                        component: "main",
-                        capability: capability,
-                        command: command,
-                        arguments: argumentsArray
-                    }];
-
-                    sendCommand(commands, description, throttleTime);
+                    
+                    if (commands) {
+                        sendCommand(commands, description, throttleTime);
+                    } else {
+                        updateStatus("Erreur: Type de bouton inconnu.", true);
+                    }
                 });
             });
 
