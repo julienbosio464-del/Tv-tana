@@ -32,17 +32,18 @@
             transform: translateY(1px);
             box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
         }
-        .app-launch-button {
-            background-color: #00A1DE; /* Bleu OQEE/Free */
+        /* Nouveau style pour le bouton TV/Lancement App (Vert) */
+        .app-launch-button-small {
+            background-color: #10B981; /* Vert émeraude */
             color: white;
             font-weight: 700;
-            font-size: 2.2rem; 
-            height: 120px; /* Légèrement réduit pour compacter */
-            box-shadow: 0 12px 25px -5px rgba(0, 161, 222, 0.4);
+            font-size: 1rem; 
+            height: 48px;
+            box-shadow: 0 6px 15px -3px rgba(16, 185, 129, 0.4);
             letter-spacing: 0.05em;
         }
-        .app-launch-button:active {
-             background-color: #008CBF;
+        .app-launch-button-small:active {
+             background-color: #059669;
         }
         /* Style pour tous les boutons d'alimentation (on/off) */
         .power-button-style {
@@ -106,42 +107,39 @@
             Prêt.
         </div>
         
-        <!-- 1. Boutons Allumer et Éteindre côte à côte -->
-        <div class="flex justify-between items-center mb-8 space-x-4">
-            <!-- Bouton Allumer -->
+        <!-- NOUVELLE DISPOSITION : Allumer | TV (Vert) | Éteindre -->
+        <div class="flex justify-between items-center mb-8 space-x-3">
+            <!-- Bouton Allumer (1/3) -->
             <button id="power-on-btn" 
                     data-key="on" 
                     data-capability="switch" 
-                    class="control-button power-button-style w-1/2 py-3 rounded-xl text-base flex items-center justify-center space-x-2">
+                    class="control-button power-button-style w-1/3 py-3 rounded-xl text-base flex items-center justify-center space-x-1">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M13 3h-2v10h2V3zM12 11c-4.411 0-8 3.589-8 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zm0 14c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z"/>
                 </svg>
-                <span>Allumer</span>
+                <span>ON</span>
             </button>
             
-            <!-- Bouton Éteindre -->
+            <!-- Bouton Lancement Direct OQEE (TV) (1/3) -->
+            <button id="launch-oqee-btn" 
+                    data-app-id="znCs95n93Q.OqeeTV" 
+                    class="control-button app-launch-button-small w-1/3 rounded-xl flex items-center justify-center">
+                <span class="text-lg font-extrabold">TV</span> 
+            </button>
+
+            <!-- Bouton Éteindre (1/3) -->
             <button id="power-off-btn" 
                     data-key="off" 
                     data-capability="switch" 
-                    class="control-button power-button-style w-1/2 py-3 rounded-xl text-base flex items-center justify-center space-x-2">
+                    class="control-button power-button-style w-1/3 py-3 rounded-xl text-base flex items-center justify-center space-x-1">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M13 3h-2v10h2V3zM12 11c-4.411 0-8 3.589-8 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zm0 14c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z"/>
                 </svg>
-                <span>Éteindre</span>
+                <span>OFF</span>
             </button>
         </div>
-
-        <!-- 2. Bouton Lancement Direct OQEE (TV) -->
-        <button id="launch-oqee-btn" 
-                data-app-id="znCs95n93Q.OqeeTV" 
-                class="control-button app-launch-button w-full rounded-2xl mb-8 flex flex-col items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M21 3H3C1.895 3 1 3.895 1 5v12c0 1.105.895 2 2 2h7l-2 3h8l-2-3h7c1.105 0 2-.895 2-2V5c0-1.105-.895-2-2-2zm-1 14H4V6h16v11z"/>
-            </svg>
-            <span class="text-3xl font-extrabold mt-1">TV</span> 
-        </button>
         
-        <!-- 3. Commandes Numériques (0-9) -->
+        <!-- 3. Commandes Numériques (0-9) - Juste en dessous du pavé ON/TV/OFF -->
         <div class="grid grid-cols-3 gap-3 mb-8">
             <button data-key="1" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">1</button>
             <button data-key="2" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">2</button>
@@ -233,7 +231,7 @@
             const launchOqeeBtn = document.getElementById('launch-oqee-btn');
             
             // Collecte de tous les boutons de commande
-            const controlButtons = document.querySelectorAll('.control-button[data-key]');
+            const controlButtons = document.querySelectorAll('.control-button[data-key], .app-launch-button-small');
 
             // --- CONFIGURATION FINALE ---
             const SMARTTHINGS_TOKEN = "a3722370-c705-4739-8709-eef82c298ce2"; 
@@ -327,6 +325,9 @@
             
             // --- Gestion des commandes dynamiques (Power, Volume, Navigation, Numérique) ---
             controlButtons.forEach(button => {
+                // S'assurer que les boutons sont bien ceux de commande (hors le bouton TV qui est géré séparément)
+                if (button.id === 'launch-oqee-btn') return; 
+
                 button.addEventListener('click', () => {
                     if (isSendingCommand) return;
                     
