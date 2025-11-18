@@ -158,7 +158,7 @@
 
         <!-- 3. Saisie Numérique de Chaîne (tvChannel.setTvChannel) -->
         <div class="p-4 bg-gray-100 rounded-xl border border-gray-200">
-            <p class="text-sm font-semibold text-gray-600 mb-3 text-center">Saisie de Chaîne Précise</p>
+            <p class="text-sm font-semibold text-gray-600 mb-3 text-center">Saisie de Chaîne Précise (Test V3)</p>
             
             <!-- Affichage du numéro de chaîne en cours de saisie -->
             <div id="channel-display" class="bg-white p-3 mb-4 rounded-lg text-3xl text-center font-mono border border-gray-300 min-h-[56px] flex items-center justify-center text-gray-700">
@@ -214,7 +214,7 @@
 
         <!-- ENCART DE STATUT EN BAS -->
         <div id="status-message" class="bg-green-100 text-green-800 p-3 rounded-xl text-center text-sm font-medium border border-green-300 mt-4">
-            ✅ Télécommande Finalisée : Seules les fonctions vérifiées et stables sont conservées.
+            ✅ Télécommande OQEE TV : Prête.
         </div>
     </div>
 
@@ -312,15 +312,20 @@
 
                     if (response.ok) {
                         updateStatus(`${description} : Commande réussie.`, false);
-                    } else if (response.status === 429) {
-                        updateStatus("Erreur 429 : Requêtes trop rapides. Veuillez réessayer dans quelques secondes.", true);
                     } else {
-                        const errorData = await response.json().catch(() => ({ message: 'Réponse illisible ou vide.' }));
-                        const detailedError = errorData.message || JSON.stringify(errorData) || 'Erreur inconnue.';
-                        updateStatus(`${description} : ÉCHEC (Code ${response.status}). Détail : ${detailedError}`, true);
+                        // Capture détaillée de l'erreur
+                        let errorDetail = '';
+                        try {
+                            const errorData = await response.json();
+                            errorDetail = errorData.message || JSON.stringify(errorData, null, 2);
+                        } catch {
+                            errorDetail = response.statusText || 'Réponse non JSON';
+                        }
+                        
+                        updateStatus(`${description} : ÉCHEC (Code HTTP ${response.status}). Détail : ${errorDetail}`, true);
                     }
                 } catch (error) {
-                    updateStatus(`Erreur réseau : ${error.message}`, true);
+                    updateStatus(`Erreur réseau (Fetch) : ${error.message}`, true);
                 } finally {
                     setTimeout(() => {
                         setAllButtonsDisabled(false);
@@ -330,7 +335,7 @@
                 }
             }
             
-            // --- GESTION DES COMMANDES PRINCIPALES ---
+            // --- GESTION DES COMMANDES PRINCIPALES (Volume, Power, App, +/-) ---
             controlButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     if (isSendingCommand) return;
@@ -391,7 +396,7 @@
                 button.addEventListener('click', () => {
                     if (isSendingCommand) return;
                     const num = button.getAttribute('data-num');
-                    // Limiter à 3 ou 4 chiffres maximum (arbitraire mais raisonnable)
+                    // Limiter à 4 chiffres maximum
                     if (currentChannelInput.length < 4) {
                         currentChannelInput += num;
                         updateChannelDisplay();
@@ -407,23 +412,26 @@
                 updateStatus("Saisie de chaîne effacée.");
             });
 
-            // 3. Bouton Envoyer
+            // 3. Bouton Envoyer (setTvChannel)
             sendChannelBtn.addEventListener('click', () => {
                 if (isSendingCommand || currentChannelInput.length === 0) return;
                 
-                const channelNumber = currentChannelInput;
+                // IMPORTANT : S'assurer que l'argument est une chaîne de caractères (string)
+                const channelNumberString = String(currentChannelInput);
+
                 const commands = [{
                     component: "main",
                     capability: "tvChannel", 
                     command: "setTvChannel", 
-                    arguments: [channelNumber] 
+                    // Argument doit être un tableau contenant le numéro de chaîne en STRING
+                    arguments: [channelNumberString] 
                 }];
-                const description = `Changer pour la chaîne ${channelNumber}`;
+                const description = `Changer pour la chaîne ${channelNumberString}`;
                 const throttleTime = LONG_THROTTLE_DELAY_MS;
                 
                 sendCommand(commands, description, throttleTime);
                 
-                // Réinitialiser la saisie après l'envoi
+                // Réinitialiser la saisie après l'envoi pour être prêt pour la prochaine
                 currentChannelInput = "";
                 updateChannelDisplay();
             });
