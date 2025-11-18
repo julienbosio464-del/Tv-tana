@@ -240,8 +240,8 @@
             const TV_DEVICE_ID = "a446a209-f9d7-7972-e908-a1a41eb7f093"; 
             const COMMAND_API_URL = `https://api.smartthings.com/v1/devices/${TV_DEVICE_ID}/commands`;
             // Délais pour les appels API
-            // Augmenté à 800ms pour plus de fiabilité lors de la saisie des chaînes (Digit + ENTER)
-            const THROTTLE_DELAY_MS = 800; 
+            // Réinitialisé à 600ms après la correction de l'erreur de formatage
+            const THROTTLE_DELAY_MS = 600; 
             const LONG_THROTTLE_DELAY_MS = 1500; 
             // --- FIN CONFIGURATION ---
 
@@ -307,6 +307,10 @@
                         } catch {
                             errorDetail = response.statusText || 'Réponse non JSON';
                         }
+                        // Affiche l'erreur formatée de la capture
+                        if (response.status === 422 && errorDetail.includes("malformed")) {
+                             errorDetail = "Erreur de format OCF. Le format JSON n'est pas accepté par la TV pour cette commande.";
+                        }
                         updateStatus(`${description} : ÉCHEC (Code HTTP ${response.status}). Détail : ${errorDetail}`, true);
                     }
                 } catch (error) {
@@ -323,17 +327,22 @@
             
             // Fonction d'envoi de touche virtuelle via OCF (pour les numéros et ENTER)
             async function sendOcfKeyCommand(keyName) {
+                
+                // Correction basée sur l'erreur 422: le deuxième argument doit être la chaîne JSON
+                const jsonValue = `{"button":"${keyName}"}`;
+
                 const ocfCommand = [{
                     component: "main",
                     capability: "ocf",
                     command: "postOcfCommand",
                     arguments: [
-                        // Le chemin (href) et la valeur (value) sont spécifiques à l'envoi de touches
+                        // Argument 0 : href
                         "/b2b/channel/tv/remotecontrol",
-                        `{"button":"${keyName}"}` // Le nom de la touche, ex: KEY_1, KEY_ENTER
+                        // Argument 1 : value (la chaîne JSON)
+                        jsonValue 
                     ]
                 }];
-                // Note: La fonction sendCommand utilise THROTTLE_DELAY_MS (800ms) pour l'attente
+                // L'attente de THROTTLE_DELAY_MS (600ms) est gérée dans sendCommand()
                 await sendCommand(ocfCommand, `Touche OCF: ${keyName}`, THROTTLE_DELAY_MS);
             }
 
@@ -376,8 +385,8 @@
                     // 3. Commandes Simples (audioVolume, tvChannel, mediaPlayback, audioMute)
                     else if (['audioVolume', 'tvChannel', 'mediaPlayback', 'audioMute'].includes(capability)) {
                         description = `Commande ${command}`;
-                        // Utilise le délai plus court pour les actions répétitives (volume, channel)
-                        throttleTime = 300; // Un délai plus court (300ms) pour les commandes régulières
+                        // Délai plus court pour les commandes régulières
+                        throttleTime = 300; 
                         commands = [{
                             component: "main",
                             capability: capability, 
@@ -429,7 +438,7 @@
                 // Itérer sur chaque chiffre et envoyer la commande KEY_X correspondante
                 for (const digit of channelNumber) {
                     const keyName = `KEY_${digit}`;
-                    // Chaque appel à sendOcfKeyCommand attend 800ms
+                    // Chaque appel à sendOcfKeyCommand attend 600ms
                     await sendOcfKeyCommand(keyName);
                 }
 
