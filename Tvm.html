@@ -193,31 +193,31 @@
             <button data-key="8" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">8</button>
             <button data-key="9" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">9</button>
             
-            <!-- CH- (Passé en remoteControl) -->
-            <button data-key="CH_DOWN" data-capability="remoteControl" class="control-button channel-button rounded-xl py-3 flex items-center justify-center">
+            <!-- CH- (Test avec la clé alternative 'channelDown') -->
+            <button data-key="channelDown" data-capability="remoteControl" class="control-button channel-button rounded-xl py-3 flex items-center justify-center">
                 CH-
             </button>
             
             <!-- 0 -->
             <button data-key="0" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">0</button>
             
-            <!-- CH+ (Passé en remoteControl) -->
-            <button data-key="CH_UP" data-capability="remoteControl" class="control-button channel-button rounded-xl py-3 flex items-center justify-center">
+            <!-- CH+ (Test avec la clé alternative 'channelUp') -->
+            <button data-key="channelUp" data-capability="remoteControl" class="control-button channel-button rounded-xl py-3 flex items-center justify-center">
                 CH+
             </button>
         </div>
 
         <!-- 3. Commandes de Volume (Rondes) -->
         <div class="flex justify-center items-center mb-8 space-x-12">
-            <!-- Bouton Volume Moins (-) (Passé en remoteControl) -->
-            <button data-key="VOLUME_DOWN" data-capability="remoteControl" 
+            <!-- Bouton Volume Moins (-) (Test avec la clé alternative 'volDown') -->
+            <button data-key="volDown" data-capability="remoteControl" 
                     class="control-button volume-button round-volume-button">
                 <span class="volume-symbol">-</span>
                 <span class="volume-label">Volume</span>
             </button>
             
-            <!-- Bouton Volume Plus (+) (Passé en remoteControl) -->
-            <button data-key="VOLUME_UP" data-capability="remoteControl" 
+            <!-- Bouton Volume Plus (+) (Test avec la clé alternative 'volUp') -->
+            <button data-key="volUp" data-capability="remoteControl" 
                     class="control-button volume-button round-volume-button">
                 <span class="volume-symbol">+</span>
                 <span class="volume-label">Volume</span>
@@ -246,10 +246,10 @@
                 <!-- Icône Enregistrer (Cercle Rouge) -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9"/></svg>
             </button>
-            <!-- Bouton 5: Information (INFO) - À définir -->
-            <button data-key="INFO" data-capability="remoteControl" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
-                <!-- Icône Info (i) -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1s1 .45 1 1v4c0 .55-.45 1-1 1zm0-8c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/></svg>
+            <!-- Bouton 5: Mute (MUTE) - Nouveau pour test -->
+            <button data-key="MUTE" data-capability="remoteControl" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
+                <!-- Icône Muet -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .9-.22 1.74-.63 2.5l1.63 1.63c.66-1.09 1.05-2.35 1.05-3.63 0-4.31-3.52-7.9-7.84-7.9-.55 0-1.07.09-1.57.24l2.12 2.12c.31-.05.63-.08.95-.08 2.07 0 3.75 1.68 3.75 3.75zm-9.98 0l-4.42-4.42-1.41 1.41L5 12l-1.41 1.41 1.41 1.41 4.42-4.42zM5 12h2v.5h-2z"/></svg>
             </button>
         </div>
         
@@ -262,7 +262,6 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const statusMessage = document.getElementById('status-message');
-            const launchOqeeBtn = document.getElementById('launch-oqee-btn');
             
             // Collecte de tous les boutons de commande
             const controlButtons = document.querySelectorAll('.control-button[data-key], .app-launch-button-small');
@@ -378,9 +377,9 @@
                             arguments: [appId]
                         }];
                     }
-                    // 3. Remote Control (Tout le reste: Numéros, Volume, Chaînes, Retour, Home, etc.)
+                    // 3. Remote Control (Tout le reste: Numéros, Volume, Chaînes, Retour, Home, Mute, etc.)
                     else if (capability === "remoteControl") {
-                         description = (key.length === 1 && !isNaN(parseInt(key))) ? `Saisie numéro: ${key}` : `Action '${key}'`;
+                         description = `Touche '${key}'`;
                          
                          // On force la commande 'sendKey' avec le nom de la clé comme argument
                          commands = [{
