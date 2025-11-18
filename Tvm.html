@@ -72,11 +72,55 @@
             background-color: #f9fafb; /* Très clair */
             color: #1f2937; /* Noir */
             font-weight: 700;
-            font-size: 1.2rem; /* Taille de police réduite */
-            height: 50px; /* Hauteur réduite */
+            font-size: 1.2rem; 
+            height: 50px; 
         }
         .num-button:active {
             background-color: #e5e7eb;
+        }
+
+        /* NOUVEAU STYLE : Boutons CH+ et CH- */
+        .channel-button {
+            background-color: #e0e7ff; /* Indigo pâle */
+            color: #4338ca; /* Indigo foncé */
+            font-weight: 700;
+            font-size: 1.1rem;
+            height: 50px;
+        }
+        .channel-button:active {
+            background-color: #c7d2fe;
+        }
+
+        /* STYLE : Boutons Volume (Jaune) */
+        .volume-button {
+             background-color: #fcd34d; /* Jaune doux */
+             color: #4b5563;
+             font-weight: bold;
+             height: 50px;
+        }
+        .volume-button:active {
+             background-color: #fbbf24;
+        }
+
+        /* NOUVEAU STYLE : Boutons Volume Ronds */
+        .round-volume-button {
+             width: 70px;
+             height: 70px;
+             border-radius: 9999px; /* rounded-full */
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+             justify-content: center;
+             padding: 4px;
+        }
+        .volume-symbol {
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+        .volume-label {
+            font-size: 0.75rem; /* text-xs */
+            font-weight: 700;
+            margin-top: -2px;
         }
 
         /* STYLE : Touches Essentielles (Retour, Accueil) */
@@ -90,16 +134,6 @@
             background-color: #f3f4f6;
         }
         
-        /* STYLE : Boutons Volume (Jaune) */
-        .volume-button {
-             background-color: #fcd34d; /* Jaune doux */
-             color: #4b5563;
-             font-weight: bold;
-             height: 50px;
-        }
-        .volume-button:active {
-             background-color: #fbbf24;
-        }
         .loading {
             cursor: not-allowed;
             opacity: 0.6;
@@ -142,7 +176,7 @@
             </button>
         </div>
         
-        <!-- 2. Commandes Numériques (0-9) - Taille réduite -->
+        <!-- 2. Commandes Numériques (0-9) + CH+/- -->
         <div class="grid grid-cols-3 gap-3 mb-8">
             <button data-key="1" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">1</button>
             <button data-key="2" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">2</button>
@@ -156,31 +190,36 @@
             <button data-key="8" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">8</button>
             <button data-key="9" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">9</button>
             
-            <div class="col-span-1"></div> <!-- Espace vide à gauche de 0 -->
+            <!-- CH- -->
+            <button data-key="CH_DOWN" data-capability="mediaChannel" class="control-button channel-button rounded-xl py-3 flex items-center justify-center space-x-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rotate-90" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13H5v-2h14v2z"/></svg>
+                <span>CH-</span>
+            </button>
+            
+            <!-- 0 -->
             <button data-key="0" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">0</button>
-            <div class="col-span-1"></div> <!-- Espace vide à droite de 0 -->
+            
+            <!-- CH+ -->
+            <button data-key="CH_UP" data-capability="mediaChannel" class="control-button channel-button rounded-xl py-3 flex items-center justify-center space-x-1">
+                <span>CH+</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 rotate-90" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            </button>
         </div>
 
-        <!-- 3. Commandes de Volume -->
-        <div class="flex justify-between items-center mb-8 space-x-4">
-            <!-- Bouton Muet (Mute) -->
-            <button data-key="MUTE" data-capability="audioVolume" class="control-button volume-button w-1/3 py-3 rounded-xl flex items-center justify-center space-x-1 text-base">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm-2 15h4v-2h-4v2zm0-4h4V7h-4v6z"/>
-                </svg>
-                <span>Mute</span>
+        <!-- 3. Commandes de Volume (Rondes) -->
+        <div class="flex justify-center items-center mb-8 space-x-12">
+            <!-- Bouton Volume Moins (-) -->
+            <button data-key="VOLUME_DOWN" data-capability="audioVolume" 
+                    class="control-button volume-button round-volume-button">
+                <span class="volume-symbol">-</span>
+                <span class="volume-label">Volume</span>
             </button>
-             <!-- Bouton Volume Moins (Icône seule) -->
-            <button data-key="VOLUME_DOWN" data-capability="audioVolume" class="control-button volume-button w-1/3 py-3 rounded-xl flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M18 13h-4v4h-2v-4H8v-2h4V8h2v4h4v2z"/>
-                </svg>
-            </button>
-            <!-- Bouton Volume Plus (Icône seule) -->
-            <button data-key="VOLUME_UP" data-capability="audioVolume" class="control-button volume-button w-1/3 py-3 rounded-xl flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M18 13h-4v4h-2v-4H8v-2h4V8h2v4h4v2z"/>
-                </svg>
+            
+            <!-- Bouton Volume Plus (+) -->
+            <button data-key="VOLUME_UP" data-capability="audioVolume" 
+                    class="control-button volume-button round-volume-button">
+                <span class="volume-symbol">+</span>
+                <span class="volume-label">Volume</span>
             </button>
         </div>
         
@@ -328,12 +367,18 @@
                     // Cas particulier : Volume
                     else if (capability === "audioVolume") {
                         command = key.toLowerCase().replace('_', '');
-                        description = `Contrôle Volume (${key.split('_')[1] || 'Mute'})`;
+                        description = `Contrôle Volume (${key === 'VOLUME_UP' ? '+' : '-'})`;
                         argumentsArray = []; 
                     } 
+                    // Cas particulier : Changement de Chaîne
+                    else if (capability === "mediaChannel") {
+                         command = key.toLowerCase().replace('_', '');
+                         description = `Changement de Chaîne (${key === 'CH_UP' ? 'Montée' : 'Descente'})`;
+                         argumentsArray = []; 
+                    }
                     // Cas général : Remote Control (Numérique, Home, Back)
                     else if (capability === "remoteControl") {
-                         description = (key.length === 1 && !isNaN(parseInt(key))) ? `Changement de chaîne: ${key}` : `Navigation '${key}'`;
+                         description = (key.length === 1 && !isNaN(parseInt(key))) ? `Saisie numéro: ${key}` : `Action '${key}'`;
                     }
 
                     const commands = [{
