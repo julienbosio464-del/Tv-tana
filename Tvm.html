@@ -156,9 +156,9 @@
             </div>
         </div>
 
-        <!-- 3. Saisie Numérique de Chaîne (tvChannel.setTvChannel) -->
+        <!-- 3. Saisie Numérique de Chaîne (via OCF Keypress) -->
         <div class="p-4 bg-gray-100 rounded-xl border border-gray-200">
-            <p class="text-sm font-semibold text-gray-600 mb-3 text-center">Saisie de Chaîne Précise (Test V3)</p>
+            <p class="text-sm font-semibold text-gray-600 mb-3 text-center">Saisie de Chaîne Précise (via Touches Virtuelles)</p>
             
             <!-- Affichage du numéro de chaîne en cours de saisie -->
             <div id="channel-display" class="bg-white p-3 mb-4 rounded-lg text-3xl text-center font-mono border border-gray-300 min-h-[56px] flex items-center justify-center text-gray-700">
@@ -237,11 +237,12 @@
             const SMARTTHINGS_TOKEN = "a3722370-c705-4739-8709-eef82c298ce2"; 
             const TV_DEVICE_ID = "a446a209-f9d7-7972-e908-a1a41eb7f093";
             const COMMAND_API_URL = `https://api.smartthings.com/v1/devices/${TV_DEVICE_ID}/commands`;
+            // Délais pour les appels API
+            const THROTTLE_DELAY_MS = 300; 
+            const LONG_THROTTLE_DELAY_MS = 1500; 
             // --- FIN CONFIGURATION ---
 
             let isSendingCommand = false;
-            const THROTTLE_DELAY_MS = 300; 
-            const LONG_THROTTLE_DELAY_MS = 1500; 
 
             // Fonction pour désactiver l'interface
             function setAllButtonsDisabled(disabled) {
@@ -255,7 +256,7 @@
                 isSendingCommand = disabled;
             }
 
-            // Fonction de mise à jour du statut, simplifiée pour ne montrer que le message
+            // Fonction de mise à jour du statut
             function updateStatus(message, isError = false) {
                 statusMessage.className = `p-3 rounded-xl text-center text-sm font-medium border ${isError ? 'bg-red-100 text-red-800 border-red-300' : 'bg-green-100 text-green-800 border-green-300'} mt-4`;
                 statusMessage.innerHTML = message;
@@ -278,42 +279,24 @@
             }
 
 
-            // Fonction générale d'envoi de commande avec gestion des erreurs
+            // Fonction d'envoi de commande SmartThings (pour Power, Volume, App, CH+/-)
             async function sendCommand(commands, description, throttleTime) {
                 updateStatus(`Envoi de l'action : ${description}...`);
                 setAllButtonsDisabled(true); 
 
                 try {
-                    let response;
-                    const maxRetries = 5;
-                    const initialDelay = 1000;
-                    
-                    for (let attempt = 0; attempt < maxRetries; attempt++) {
-                        response = await fetch(COMMAND_API_URL, {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': `Bearer ${SMARTTHINGS_TOKEN}`,
-                                'Content-Type': 'application/json; charset=utf-8'
-                            },
-                            body: JSON.stringify({ commands: commands })
-                        });
-
-                        if (response.ok || response.status !== 429) {
-                            break; 
-                        }
-
-                        // Backoff exponentiel pour l'erreur 429
-                        const delay = initialDelay * Math.pow(2, attempt);
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                        if (attempt === maxRetries - 1) {
-                            break;
-                        }
-                    }
+                    const response = await fetch(COMMAND_API_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${SMARTTHINGS_TOKEN}`,
+                            'Content-Type': 'application/json; charset=utf-8'
+                        },
+                        body: JSON.stringify({ commands: commands })
+                    });
 
                     if (response.ok) {
                         updateStatus(`${description} : Commande réussie.`, false);
                     } else {
-                        // Capture détaillée de l'erreur
                         let errorDetail = '';
                         try {
                             const errorData = await response.json();
@@ -321,21 +304,38 @@
                         } catch {
                             errorDetail = response.statusText || 'Réponse non JSON';
                         }
-                        
                         updateStatus(`${description} : ÉCHEC (Code HTTP ${response.status}). Détail : ${errorDetail}`, true);
                     }
                 } catch (error) {
                     updateStatus(`Erreur réseau (Fetch) : ${error.message}`, true);
                 } finally {
+                    // Libérer l'interface après le délai d'attente
                     setTimeout(() => {
                         setAllButtonsDisabled(false);
                         updateStatus("Prêt.");
-                        updateChannelDisplay(); // Réactive le bouton OK si un numéro était en cours
+                        updateChannelDisplay();
                     }, throttleTime);
                 }
             }
             
-            // --- GESTION DES COMMANDES PRINCIPALES (Volume, Power, App, +/-) ---
+            // Fonction d'envoi de touche virtuelle via OCF (pour les numéros et ENTER)
+            async function sendOcfKeyCommand(keyName) {
+                const ocfCommand = [{
+                    component: "main",
+                    capability: "ocf",
+                    command: "postOcfCommand",
+                    arguments: [
+                        // Le chemin (href) et la valeur (value) sont spécifiques à l'envoi de touches
+                        "/b2b/channel/tv/remotecontrol",
+                        `{"button":"${keyName}"}` // Le nom de la touche, ex: KEY_1, KEY_ENTER
+                    ]
+                }];
+                // Utilisation du délai le plus court pour les touches successives
+                await sendCommand(ocfCommand, `Touche OCF: ${keyName}`, THROTTLE_DELAY_MS);
+            }
+
+
+            // --- GESTION DES COMMANDES PRINCIPALES (Volume, Power, App, CH+/-) ---
             controlButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     if (isSendingCommand) return;
@@ -389,7 +389,7 @@
                 });
             });
 
-            // --- GESTION DU PAVÉ NUMÉRIQUE (setTvChannel) ---
+            // --- GESTION DU PAVÉ NUMÉRIQUE (setTvChannel via OCF) ---
 
             // 1. Saisie de chiffre
             numButtons.forEach(button => {
@@ -413,27 +413,35 @@
             });
 
             // 3. Bouton Envoyer (setTvChannel)
-            sendChannelBtn.addEventListener('click', () => {
+            sendChannelBtn.addEventListener('click', async () => {
                 if (isSendingCommand || currentChannelInput.length === 0) return;
                 
-                // IMPORTANT : S'assurer que l'argument est une chaîne de caractères (string)
-                const channelNumberString = String(currentChannelInput);
+                const channelNumber = currentChannelInput;
+                
+                updateStatus(`Composition de la chaîne ${channelNumber}...`);
+                setAllButtonsDisabled(true);
 
-                const commands = [{
-                    component: "main",
-                    capability: "tvChannel", 
-                    command: "setTvChannel", 
-                    // Argument doit être un tableau contenant le numéro de chaîne en STRING
-                    arguments: [channelNumberString] 
-                }];
-                const description = `Changer pour la chaîne ${channelNumberString}`;
-                const throttleTime = LONG_THROTTLE_DELAY_MS;
+                // Itérer sur chaque chiffre et envoyer la commande KEY_X correspondante
+                for (const digit of channelNumber) {
+                    const keyName = `KEY_${digit}`;
+                    // Important: l'attente est gérée dans la fonction sendCommand pour chaque touche
+                    await sendOcfKeyCommand(keyName);
+                }
+
+                // Envoyer la touche ENTER pour valider le numéro de chaîne
+                await sendOcfKeyCommand('KEY_ENTER');
+
+                updateStatus(`Chaîne ${channelNumber} envoyée via touches virtuelles.`, false);
                 
-                sendCommand(commands, description, throttleTime);
-                
-                // Réinitialiser la saisie après l'envoi pour être prêt pour la prochaine
+                // Réinitialiser la saisie après l'envoi 
                 currentChannelInput = "";
-                updateChannelDisplay();
+                
+                // Libérer l'interface après le délai pour la touche ENTER
+                setTimeout(() => {
+                    setAllButtonsDisabled(false);
+                    updateStatus("Prêt.");
+                    updateChannelDisplay();
+                }, LONG_THROTTLE_DELAY_MS);
             });
 
 
