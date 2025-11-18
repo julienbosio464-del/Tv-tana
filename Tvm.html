@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Télécommande OQEE TV Définitive</title>
-    <!-- Chargement de Tailwind CSS pour un style moderne et responsive sur mobile -->
+    <title>Télécommande OQEE TV Numérique Fiable</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Configuration de la police et du design mobile-first */
@@ -12,7 +11,7 @@
             font-family: 'Inter', sans-serif;
         }
         body {
-            background-color: #eef2f6; /* Bleu très clair */
+            background-color: #eef2f6; 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -27,7 +26,7 @@
         .control-button {
             transition: all 0.15s ease-in-out;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
-            border: 1px solid #d1d5db; /* Bordure légère */
+            border: 1px solid #d1d5db;
         }
         .control-button:active {
             transform: translateY(1px);
@@ -36,7 +35,7 @@
         
         /* STYLE : Bouton TV/Lancement App (Bleu) */
         .app-launch-button-style {
-            background-color: #3B82F6; /* Bleu Vif */
+            background-color: #3B82F6; 
             color: white;
             font-weight: 700;
             font-size: 1.5rem; 
@@ -57,7 +56,7 @@
              padding: 4px;
         }
         .volume-button {
-             background-color: #fcd34d; /* Jaune doux */
+             background-color: #fcd34d; 
              color: #4b5563; font-weight: bold;
         }
         .volume-button:active { background-color: #fbbf24; }
@@ -69,6 +68,16 @@
         }
         .essential-button:active { background-color: #f3f4f6; }
 
+        /* STYLE : Boutons Numériques */
+        .num-button { 
+            background-color: #f9fafb; 
+            color: #1f2937; 
+            font-weight: 700; 
+            font-size: 1.2rem; 
+            height: 50px; 
+            border: 1px solid #e5e7eb;
+        }
+
         .loading {
             cursor: not-allowed; opacity: 0.6; pointer-events: none;
         }
@@ -79,9 +88,7 @@
         
         <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">Télécommande OQEE TV</h1>
         
-        <!-- 1. Boutons Power et Lancement TV -->
         <div class="flex flex-col space-y-4 mb-8">
-            <!-- Bouton Lancement Direct OQEE (TV - Bleu) -->
             <button id="launch-oqee-btn" 
                     data-app-id="znCs95n93Q.OqeeTV" 
                     data-capability="custom.launchapp" 
@@ -91,7 +98,6 @@
             </button>
             
             <div class="flex justify-between space-x-4">
-                <!-- Bouton Allumer (Vert) -->
                 <button id="power-on-btn" 
                         data-key="on" 
                         data-capability="switch" 
@@ -102,7 +108,6 @@
                     <span>ON</span>
                 </button>
 
-                <!-- Bouton Éteindre (Rouge) -->
                 <button id="power-off-btn" 
                         data-key="off" 
                         data-capability="switch" 
@@ -115,9 +120,7 @@
             </div>
         </div>
         
-        <!-- 2. Commandes de Volume / Chaîne / Mute -->
         <div class="flex justify-around items-center mb-8">
-            <!-- Contrôle Volume (audioVolume) -->
             <div class="flex flex-col space-y-3 items-center">
                 <span class="text-sm font-semibold text-gray-600 mb-1">Volume</span>
                 <button data-command="volumeUp" data-capability="audioVolume" class="control-button volume-button round-button">
@@ -126,28 +129,56 @@
                 <button data-command="volumeDown" data-capability="audioVolume" class="control-button volume-button round-button">
                     <span class="text-2xl font-black">-</span>
                 </button>
-                 <!-- Mute (audioMute) -->
-                <button data-command="mute" data-capability="audioMute" class="control-button essential-button rounded-full w-[70px] h-[70px] mt-4 flex items-center justify-center bg-gray-200 hover:bg-gray-300">
+                 <button data-command="mute" data-capability="audioMute" class="control-button essential-button rounded-full w-[70px] h-[70px] mt-4 flex items-center justify-center bg-gray-200 hover:bg-gray-300">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .9-.22 1.74-.63 2.5l1.63 1.63c.66-1.09 1.05-2.35 1.05-3.63 0-4.31-3.52-7.9-7.84-7.9-.55 0-1.07.09-1.57.24l2.12 2.12c.31-.05.63-.08.95-.08 2.07 0 3.75 1.68 3.75 3.75zm-9.98 0l-4.42-4.42-1.41 1.41L5 12l-1.41 1.41 1.41 1.41 4.42-4.42zM5 12h2v.5h-2z"/></svg>
                 </button>
             </div>
             
-            <!-- Contrôle Chaîne (tvChannel) -->
             <div class="flex flex-col space-y-3 items-center">
-                <span class="text-sm font-semibold text-gray-600 mb-1">Chaîne</span>
+                <span class="text-sm font-semibold text-gray-600 mb-1">Chaîne +/-</span>
                  <button data-command="channelUp" data-capability="tvChannel" class="control-button app-launch-button-style round-button w-[70px] h-[70px] flex flex-col justify-center items-center">
                     <span class="text-2xl font-black">CH+</span>
                  </button>
                  <button data-command="channelDown" data-capability="tvChannel" class="control-button app-launch-button-style round-button w-[70px] h-[70px] flex flex-col justify-center items-center">
                     <span class="text-2xl font-black">CH-</span>
                  </button>
-                 <!-- Espace pour l'alignement -->
                  <div class="w-[70px] h-[70px] mt-4"></div>
             </div>
         </div>
 
-        <!-- 3. Touches Media (mediaPlayback) -->
-        <div class="mt-4 p-4 bg-gray-100 rounded-xl border border-gray-200">
+        <div class="p-4 bg-gray-100 rounded-xl border border-gray-200">
+            <p class="text-sm font-semibold text-gray-600 mb-3 text-center">Saisie de Chaîne Précise (via Touches Virtuelles)</p>
+            
+            <div id="channel-display" class="bg-white p-3 mb-4 rounded-lg text-3xl text-center font-mono border border-gray-300 min-h-[56px] flex items-center justify-center text-gray-700">
+                _
+            </div>
+
+            <div class="grid grid-cols-3 gap-3">
+                <button data-num="1" class="control-button num-button rounded-xl py-3">1</button>
+                <button data-num="2" class="control-button num-button rounded-xl py-3">2</button>
+                <button data-num="3" class="control-button num-button rounded-xl py-3">3</button>
+                
+                <button data-num="4" class="control-button num-button rounded-xl py-3">4</button>
+                <button data-num="5" class="control-button num-button rounded-xl py-3">5</button>
+                <button data-num="6" class="control-button num-button rounded-xl py-3">6</button>
+                
+                <button data-num="7" class="control-button num-button rounded-xl py-3">7</button>
+                <button data-num="8" class="control-button num-button rounded-xl py-3">8</button>
+                <button data-num="9" class="control-button num-button rounded-xl py-3">9</button>
+                
+                <button id="clear-channel-btn" class="control-button num-button rounded-xl py-3 text-red-500 text-sm">
+                    EFFACER
+                </button>
+                
+                <button data-num="0" class="control-button num-button rounded-xl py-3">0</button>
+                
+                <button id="send-channel-btn" class="control-button num-button rounded-xl py-3 bg-indigo-500 text-white hover:bg-indigo-600 border-indigo-600" disabled>
+                    OK
+                </button>
+            </div>
+        </div>
+        
+        <div class="mt-8 p-4 bg-gray-100 rounded-xl border border-gray-200">
              <p class="text-sm font-semibold text-gray-600 mb-3 text-center">Contrôles Média</p>
             <div class="flex justify-between items-center space-x-2">
                 
@@ -166,100 +197,135 @@
             </div>
         </div>
 
-        <!-- ENCART DE STATUT EN BAS -->
         <div id="status-message" class="bg-green-100 text-green-800 p-3 rounded-xl text-center text-sm font-medium border border-green-300 mt-4">
-            ✅ Télécommande Finalisée : Seules les fonctions vérifiées et stables sont conservées.
+            ✅ Télécommande OQEE TV : Prête.
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const statusMessage = document.getElementById('status-message');
+            const channelDisplay = document.getElementById('channel-display');
+            const sendChannelBtn = document.getElementById('send-channel-btn');
+            const clearChannelBtn = document.getElementById('clear-channel-btn');
             
-            // Collecte de tous les boutons de commande
+            // État de la saisie de chaîne
+            let currentChannelInput = "";
+
+            // Collecte de tous les boutons de commande (hors pavé numérique)
             const controlButtons = document.querySelectorAll('.control-button[data-command], .app-launch-button-style');
+            // Collecte des boutons numériques
+            const numButtons = document.querySelectorAll('.num-button[data-num]');
 
             // --- CONFIGURATION FINALE ---
-            const SMARTTHINGS_TOKEN = "a3722370-c705-4739-8709-eef82c298ce2"; 
-            const TV_DEVICE_ID = "a446a209-f9d7-7972-e908-a1a41eb7f093";
+            // Nouveau Jeton d'autorisation (SMARTTHINGS_TOKEN)
+            const SMARTTHINGS_TOKEN = "f387156a-3b31-4204-b34a-35bb3c0cf187"; 
+            // ID de l'appareil TV (TV_DEVICE_ID)
+            const TV_DEVICE_ID = "a446a209-f9d7-7972-e908-a1a41eb7f093"; 
             const COMMAND_API_URL = `https://api.smartthings.com/v1/devices/${TV_DEVICE_ID}/commands`;
+            // Délais pour les appels API
+            const THROTTLE_DELAY_MS = 300; 
+            const LONG_THROTTLE_DELAY_MS = 1500; 
             // --- FIN CONFIGURATION ---
 
             let isSendingCommand = false;
-            const THROTTLE_DELAY_MS = 300; 
-            const LONG_THROTTLE_DELAY_MS = 1500; 
 
             // Fonction pour désactiver l'interface
             function setAllButtonsDisabled(disabled) {
+                // Désactiver tous les boutons de commande principaux
                 controlButtons.forEach(btn => btn.classList.toggle('loading', disabled));
+                // Désactiver le pavé numérique
+                numButtons.forEach(btn => btn.classList.toggle('loading', disabled));
+                clearChannelBtn.classList.toggle('loading', disabled);
+                // Gérer le bouton OK
+                sendChannelBtn.disabled = disabled || currentChannelInput.length === 0;
                 isSendingCommand = disabled;
             }
 
-            // Fonction de mise à jour du statut, simplifiée pour ne montrer que le message
+            // Fonction de mise à jour du statut
             function updateStatus(message, isError = false) {
                 statusMessage.className = `p-3 rounded-xl text-center text-sm font-medium border ${isError ? 'bg-red-100 text-red-800 border-red-300' : 'bg-green-100 text-green-800 border-green-300'} mt-4`;
                 statusMessage.innerHTML = message;
                 console.log(message);
             }
+            
+            // Mise à jour de l'affichage du numéro de chaîne
+            function updateChannelDisplay() {
+                channelDisplay.textContent = currentChannelInput || "_";
+                // Activer le bouton OK si un numéro est entré
+                sendChannelBtn.disabled = currentChannelInput.length === 0 || isSendingCommand;
+                // Ajuster la couleur du bouton OK
+                if (currentChannelInput.length > 0) {
+                     sendChannelBtn.classList.remove('bg-indigo-500/50', 'text-gray-400');
+                     sendChannelBtn.classList.add('bg-indigo-500', 'text-white');
+                } else {
+                     sendChannelBtn.classList.remove('bg-indigo-500', 'text-white');
+                     sendChannelBtn.classList.add('bg-indigo-500/50', 'text-gray-400');
+                }
+            }
 
-            // Fonction générale d'envoi de commande avec gestion des erreurs
+
+            // Fonction d'envoi de commande SmartThings (pour Power, Volume, App, CH+/-)
             async function sendCommand(commands, description, throttleTime) {
                 updateStatus(`Envoi de l'action : ${description}...`);
                 setAllButtonsDisabled(true); 
 
                 try {
-                    let response;
-                    const maxRetries = 5;
-                    const initialDelay = 1000;
-                    
-                    for (let attempt = 0; attempt < maxRetries; attempt++) {
-                        response = await fetch(COMMAND_API_URL, {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': `Bearer ${SMARTTHINGS_TOKEN}`,
-                                'Content-Type': 'application/json; charset=utf-8'
-                            },
-                            body: JSON.stringify({ commands: commands })
-                        });
-
-                        if (response.ok || response.status !== 429) {
-                            break; 
-                        }
-
-                        // Backoff exponentiel pour l'erreur 429
-                        const delay = initialDelay * Math.pow(2, attempt);
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                        if (attempt === maxRetries - 1) {
-                            break;
-                        }
-                    }
+                    const response = await fetch(COMMAND_API_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${SMARTTHINGS_TOKEN}`,
+                            'Content-Type': 'application/json; charset=utf-8'
+                        },
+                        body: JSON.stringify({ commands: commands })
+                    });
 
                     if (response.ok) {
                         updateStatus(`${description} : Commande réussie.`, false);
-                    } else if (response.status === 429) {
-                        updateStatus("Erreur 429 : Requêtes trop rapides. Veuillez réessayer dans quelques secondes.", true);
                     } else {
-                        const errorData = await response.json().catch(() => ({ message: 'Réponse illisible ou vide.' }));
-                        const detailedError = errorData.message || JSON.stringify(errorData) || 'Erreur inconnue.';
-                        updateStatus(`${description} : ÉCHEC (Code ${response.status}). Détail : ${detailedError}`, true);
+                        let errorDetail = '';
+                        try {
+                            const errorData = await response.json();
+                            errorDetail = errorData.message || JSON.stringify(errorData, null, 2);
+                        } catch {
+                            errorDetail = response.statusText || 'Réponse non JSON';
+                        }
+                        updateStatus(`${description} : ÉCHEC (Code HTTP ${response.status}). Détail : ${errorDetail}`, true);
                     }
                 } catch (error) {
-                    updateStatus(`Erreur réseau : ${error.message}`, true);
+                    updateStatus(`Erreur réseau (Fetch) : ${error.message}`, true);
                 } finally {
+                    // Libérer l'interface après le délai d'attente
                     setTimeout(() => {
                         setAllButtonsDisabled(false);
                         updateStatus("Prêt.");
+                        updateChannelDisplay();
                     }, throttleTime);
                 }
             }
             
-            // --- GESTION DES COMMANDES ---
-            
+            // Fonction d'envoi de touche virtuelle via OCF (pour les numéros et ENTER)
+            async function sendOcfKeyCommand(keyName) {
+                const ocfCommand = [{
+                    component: "main",
+                    capability: "ocf",
+                    command: "postOcfCommand",
+                    arguments: [
+                        // Le chemin (href) et la valeur (value) sont spécifiques à l'envoi de touches
+                        "/b2b/channel/tv/remotecontrol",
+                        `{"button":"${keyName}"}` // Le nom de la touche, ex: KEY_1, KEY_ENTER
+                    ]
+                }];
+                // Utilisation du délai le plus court pour les touches successives
+                await sendCommand(ocfCommand, `Touche OCF: ${keyName}`, THROTTLE_DELAY_MS);
+            }
+
+
+            // --- GESTION DES COMMANDES PRINCIPALES (Volume, Power, App, CH+/-) ---
             controlButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     if (isSendingCommand) return;
                     
-                    const key = button.getAttribute('data-key'); 
                     const command = button.getAttribute('data-command'); 
                     const capability = button.getAttribute('data-capability');
                     let commands;
@@ -268,7 +334,8 @@
 
                     // 1. Marche/Arrêt (switch)
                     if (capability === "switch") {
-                        description = (command === 'on' ? "Allumer la TV" : "Éteindre la TV");
+                        const key = button.getAttribute('data-key'); 
+                        description = (key === 'on' ? "Allumer la TV" : "Éteindre la TV");
                         throttleTime = LONG_THROTTLE_DELAY_MS;
                         commands = [{
                             component: "main",
@@ -308,10 +375,66 @@
                 });
             });
 
+            // --- GESTION DU PAVÉ NUMÉRIQUE (setTvChannel via OCF) ---
+
+            // 1. Saisie de chiffre
+            numButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    if (isSendingCommand) return;
+                    const num = button.getAttribute('data-num');
+                    // Limiter à 4 chiffres maximum
+                    if (currentChannelInput.length < 4) {
+                        currentChannelInput += num;
+                        updateChannelDisplay();
+                    }
+                });
+            });
+
+            // 2. Bouton Effacer
+            clearChannelBtn.addEventListener('click', () => {
+                if (isSendingCommand) return;
+                currentChannelInput = "";
+                updateChannelDisplay();
+                updateStatus("Saisie de chaîne effacée.");
+            });
+
+            // 3. Bouton Envoyer (setTvChannel)
+            sendChannelBtn.addEventListener('click', async () => {
+                if (isSendingCommand || currentChannelInput.length === 0) return;
+                
+                const channelNumber = currentChannelInput;
+                
+                updateStatus(`Composition de la chaîne ${channelNumber}...`);
+                setAllButtonsDisabled(true);
+
+                // Itérer sur chaque chiffre et envoyer la commande KEY_X correspondante
+                for (const digit of channelNumber) {
+                    const keyName = `KEY_${digit}`;
+                    // Important: l'attente est gérée dans la fonction sendCommand pour chaque touche
+                    await sendOcfKeyCommand(keyName);
+                }
+
+                // Envoyer la touche ENTER pour valider le numéro de chaîne
+                await sendOcfKeyCommand('KEY_ENTER');
+
+                updateStatus(`Chaîne ${channelNumber} envoyée via touches virtuelles.`, false);
+                
+                // Réinitialiser la saisie après l'envoi 
+                currentChannelInput = "";
+                
+                // Libérer l'interface après le délai pour la touche ENTER
+                setTimeout(() => {
+                    setAllButtonsDisabled(false);
+                    updateStatus("Prêt.");
+                    updateChannelDisplay();
+                }, LONG_THROTTLE_DELAY_MS);
+            });
+
+
             // Initialisation avec le message minimal
-            updateStatus("Télécommande OQEE TV : Prête. Seules les fonctions vérifiées sont affichées.");
+            updateStatus("Télécommande OQEE TV : Prête. Saisissez la chaîne désirée ci-dessous.");
+            updateChannelDisplay(); // Assurez-vous que l'état initial est affiché
         });
     </script>
 </body>
 </html>
-
