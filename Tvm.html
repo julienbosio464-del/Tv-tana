@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Télécommande OQEE TV Complète v2</title>
+    <title>Télécommande OQEE TV Définitive</title>
     <!-- Chargement de Tailwind CSS pour un style moderne et responsive sur mobile -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -44,9 +44,7 @@
             box-shadow: 0 6px 15px -3px rgba(59, 130, 246, 0.4);
             letter-spacing: 0.05em;
         }
-        .app-launch-button-style:active {
-             background-color: #2563EB;
-        }
+        .app-launch-button-style:active { background-color: #2563EB; }
 
         /* STYLE : Bouton Allumer (Vert) */
         .power-on-style { background-color: #10B981; color: white; font-weight: 600; }
@@ -136,7 +134,7 @@
         
         <!-- 2. Commandes de Volume / Chaîne / Mute -->
         <div class="flex justify-between items-start mb-8 space-x-4">
-            <!-- Contrôle Volume (Utilise audioVolume.volumeUp/Down) -->
+            <!-- Contrôle Volume (audioVolume) -->
             <div class="flex flex-col space-y-2 w-1/3">
                 <button data-command="volumeUp" data-capability="audioVolume" class="control-button volume-button round-button">
                     <span class="text-2xl">+</span>
@@ -148,86 +146,91 @@
                 </button>
             </div>
 
-            <!-- D-Pad (Navigation : Tente avec remoteControl.sendKey) -->
+            <!-- D-Pad (Navigation : utilise samsungvd.remoteControl.send(KEY_X)) -->
             <div class="dpad-container">
                 <div class="dpad-button invisible"></div>
-                <button data-key="KEY_UP" data-capability="remoteControl" class="dpad-button rounded-t-xl">
+                <button data-key="KEY_UP" data-capability="samsungvd.remoteControl" class="dpad-button rounded-t-xl">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M7 14l5-5 5 5z"/></svg>
                 </button>
                 <div class="dpad-button invisible"></div>
 
-                <button data-key="KEY_LEFT" data-capability="remoteControl" class="dpad-button rounded-l-xl">
+                <button data-key="KEY_LEFT" data-capability="samsungvd.remoteControl" class="dpad-button rounded-l-xl">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M14 7l-5 5 5 5z"/></svg>
                 </button>
-                <button data-key="KEY_ENTER" data-capability="remoteControl" class="dpad-button dpad-center">OK</button>
-                <button data-key="KEY_RIGHT" data-capability="remoteControl" class="dpad-button rounded-r-xl">
+                <button data-key="KEY_ENTER" data-capability="samsungvd.remoteControl" class="dpad-button dpad-center">OK</button>
+                <button data-key="KEY_RIGHT" data-capability="samsungvd.remoteControl" class="dpad-button rounded-r-xl">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M10 17l5-5-5-5z"/></svg>
                 </button>
 
                 <div class="dpad-button invisible"></div>
-                <button data-key="KEY_DOWN" data-capability="remoteControl" class="dpad-button rounded-b-xl">
+                <button data-key="KEY_DOWN" data-capability="samsungvd.remoteControl" class="dpad-button rounded-b-xl">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
                 </button>
                 <div class="dpad-button invisible"></div>
             </div>
 
-            <!-- Contrôle Chaîne (Tente avec remoteControl.sendKey) -->
+            <!-- Contrôle Chaîne (tvChannel) -->
             <div class="flex flex-col space-y-2 w-1/3">
-                 <button data-key="KEY_CHUP" data-capability="remoteControl" class="control-button channel-button round-button">
+                 <button data-command="channelUp" data-capability="tvChannel" class="control-button channel-button round-button">
                     <span class="text-2xl">CH+</span>
                  </button>
-                 <button data-key="KEY_CHDOWN" data-capability="remoteControl" class="control-button channel-button round-button">
+                 <button data-command="channelDown" data-capability="tvChannel" class="control-button channel-button round-button">
                     <span class="text-2xl">CH-</span>
                  </button>
             </div>
         </div>
 
-        <!-- 3. Touches Numériques (Tente avec remoteControl.sendKey) -->
+        <!-- 3. Touches Numériques (samsungvd.remoteControl) -->
         <div class="grid grid-cols-3 gap-3 mb-8">
-            <button data-key="KEY_1" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">1</button>
-            <button data-key="KEY_2" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">2</button>
-            <button data-key="KEY_3" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">3</button>
+            <button data-key="KEY_1" data-capability="samsungvd.remoteControl" class="control-button num-button rounded-xl py-3">1</button>
+            <button data-key="KEY_2" data-capability="samsungvd.remoteControl" class="control-button num-button rounded-xl py-3">2</button>
+            <button data-key="KEY_3" data-capability="samsungvd.remoteControl" class="control-button num-button rounded-xl py-3">3</button>
             
-            <button data-key="KEY_4" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">4</button>
-            <button data-key="KEY_5" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">5</button>
-            <button data-key="KEY_6" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">6</button>
+            <button data-key="KEY_4" data-capability="samsungvd.remoteControl" class="control-button num-button rounded-xl py-3">4</button>
+            <button data-key="KEY_5" data-capability="samsungvd.remoteControl" class="control-button num-button rounded-xl py-3">5</button>
+            <button data-key="KEY_6" data-capability="samsungvd.remoteControl" class="control-button num-button rounded-xl py-3">6</button>
             
-            <button data-key="KEY_7" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">7</button>
-            <button data-key="KEY_8" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">8</button>
-            <button data-key="KEY_9" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">9</button>
+            <button data-key="KEY_7" data-capability="samsungvd.remoteControl" class="control-button num-button rounded-xl py-3">7</button>
+            <button data-key="KEY_8" data-capability="samsungvd.remoteControl" class="control-button num-button rounded-xl py-3">8</button>
+            <button data-key="KEY_9" data-capability="samsungvd.remoteControl" class="control-button num-button rounded-xl py-3">9</button>
             
             <!-- Touches spéciales pour l'alignement -->
-            <button data-key="KEY_RETURN" data-capability="remoteControl" class="control-button channel-button rounded-xl py-3 flex items-center justify-center">
+            <button data-key="KEY_RETURN" data-capability="samsungvd.remoteControl" class="control-button channel-button rounded-xl py-3 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H7V9h4V5l6 6-6 6z"/></svg>
             </button>
             
-            <button data-key="KEY_0" data-capability="remoteControl" class="control-button num-button rounded-xl py-3">0</button>
+            <button data-key="KEY_0" data-capability="samsungvd.remoteControl" class="control-button num-button rounded-xl py-3">0</button>
             
-            <button data-key="KEY_HOME" data-capability="remoteControl" class="control-button channel-button rounded-xl py-3 flex items-center justify-center">
+            <button data-key="KEY_HOME" data-capability="samsungvd.remoteControl" class="control-button channel-button rounded-xl py-3 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5.69l5-4.5V3h3v2h-2l-1-1v10h2v2h-3v-2l-1-1v-4L12 5.69zM12 3L2 12h3v8h14v-8h3L12 3z"/></svg>
             </button>
         </div>
         
-        <!-- 4. Touches Essentielles (Menu, REC, Mute, etc.) -->
+        <!-- 4. Touches Essentielles et Média (Mute, Playback, Menu, etc.) -->
         <div class="flex justify-between items-center space-x-2">
-            <button data-key="KEY_MENU" data-capability="remoteControl" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-            </button>
-            <button data-key="KEY_INFO" data-capability="remoteControl" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-            </button>
-            <!-- Bouton Mute (Utilise audioMute.mute) -->
+             <!-- Mute (audioMute) -->
             <button data-command="mute" data-capability="audioMute" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .9-.22 1.74-.63 2.5l1.63 1.63c.66-1.09 1.05-2.35 1.05-3.63 0-4.31-3.52-7.9-7.84-7.9-.55 0-1.07.09-1.57.24l2.12 2.12c.31-.05.63-.08.95-.08 2.07 0 3.75 1.68 3.75 3.75zm-9.98 0l-4.42-4.42-1.41 1.41L5 12l-1.41 1.41 1.41 1.41 4.42-4.42zM5 12h2v.5h-2z"/></svg>
             </button>
-            <button data-key="KEY_REC" data-capability="remoteControl" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9"/></svg>
+            
+            <!-- Touches Media (mediaPlayback) -->
+            <button data-command="rewind" data-capability="mediaPlayback" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M11 6v12l-5.5-3.5L11 6zm7.5 0L13 9.5 18.5 6V3H21v18h-2V6z"/></svg>
+            </button>
+            <button data-command="play" data-capability="mediaPlayback" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+            <button data-command="pause" data-capability="mediaPlayback" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+            </button>
+            <button data-command="fastForward" data-capability="mediaPlayback" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M13 18V6l5.5 3.5L13 18zm-7.5 0L11 14.5 5.5 18V3H3v18h2V6z"/></svg>
             </button>
         </div>
         
         <!-- ENCART DE STATUT EN BAS -->
         <div id="status-message" class="bg-indigo-100 text-indigo-800 p-3 rounded-xl text-center text-sm font-medium border border-indigo-200 mt-4">
-            Prêt.
+            Prêt pour le test final de la navigation.
         </div>
     </div>
 
@@ -318,8 +321,8 @@
                 button.addEventListener('click', () => {
                     if (isSendingCommand) return;
                     
-                    const key = button.getAttribute('data-key'); // Pour les touches (remoteControl)
-                    const command = button.getAttribute('data-command'); // Pour les commandes (audioVolume/Mute)
+                    const key = button.getAttribute('data-key'); // Pour les touches (samsungvd.remoteControl)
+                    const command = button.getAttribute('data-command'); // Pour les commandes (audioVolume, tvChannel, mediaPlayback, etc.)
                     const capability = button.getAttribute('data-capability');
                     let commands;
                     let description;
@@ -348,29 +351,29 @@
                             arguments: [appId]
                         }];
                     }
-                    // 3. Commandes Audio Officielles (audioVolume, audioMute)
-                    else if (capability === "audioVolume" || capability === "audioMute") {
+                    // 3. Commandes Simples (audioVolume, tvChannel, mediaPlayback, audioMute)
+                    else if (['audioVolume', 'tvChannel', 'mediaPlayback', 'audioMute'].includes(capability)) {
                         description = `Commande ${capability}.${command}`;
                         commands = [{
                             component: "main",
                             capability: capability, 
                             command: command, 
-                            arguments: []
+                            arguments: [] // Les commandes comme volumeUp n'ont pas d'arguments
                         }];
                     }
-                    // 4. Remote Control (Clé comme commande - Test Final)
-                    else if (capability === "remoteControl" && key.startsWith("KEY_")) {
-                         description = `Touche '${key.substring(4)}'`;
+                    // 4. Remote Control Spécifique Samsung (samsungvd.remoteControl.send)
+                    else if (capability === "samsungvd.remoteControl" && key.startsWith("KEY_")) {
+                         description = `Touche '${key.substring(4)}' (Navigation/Chiffres)`;
                          
-                         // Test final avec la méthode sendKey officielle de l'API SmartThings
+                         // Utilisation de la commande 'send' avec la touche en argument
                          commands = [{
                             component: "main",
-                            capability: "remoteControl", 
-                            command: "sendKey",
-                            arguments: [key]
+                            capability: "samsungvd.remoteControl", 
+                            command: "send", // Le nom de la commande est 'send'
+                            arguments: [key] // L'argument est la touche (ex: KEY_UP)
                         }];
                         
-                        console.log("Remote Control Final Payload:", JSON.stringify(commands));
+                        console.log("Samsung Remote Control Payload:", JSON.stringify(commands));
                     }
                     
                     if (commands) {
@@ -382,7 +385,7 @@
             });
 
             // Initialisation avec le message minimal
-            updateStatus("Prêt.");
+            updateStatus("Prêt pour le test final de la navigation.");
         });
     </script>
 </body>
