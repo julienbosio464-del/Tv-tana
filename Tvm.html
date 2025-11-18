@@ -100,10 +100,9 @@
 </head>
 <body class="selection:bg-indigo-200">
     <div id="app-container" class="w-full max-w-sm control-card p-8 rounded-3xl border border-gray-200">
-        <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-8">Télécommande OQEE Direct</h1>
         
-        <!-- Zone de messages d'état -->
-        <div id="status-message" class="bg-indigo-100 text-indigo-800 p-4 rounded-xl text-center mb-4 text-sm font-medium border border-indigo-200">
+        <!-- Zone de messages d'état (minimaliste) -->
+        <div id="status-message" class="bg-indigo-100 text-indigo-800 p-4 rounded-xl text-center mb-8 text-sm font-medium border border-indigo-200">
             Prêt.
         </div>
         
@@ -132,7 +131,7 @@
             </button>
         </div>
 
-        <!-- 2. Bouton Lancement Direct OQEE (Maintenant appelé "TV" sans sous-texte) -->
+        <!-- 2. Bouton Lancement Direct OQEE (TV) -->
         <button id="launch-oqee-btn" 
                 data-app-id="znCs95n93Q.OqeeTV" 
                 class="control-button app-launch-button w-full rounded-2xl mb-8 flex flex-col items-center justify-center">
@@ -197,13 +196,13 @@
                 </svg>
                 <span>Mute</span>
             </button>
-             <!-- Bouton Volume Moins -->
+             <!-- Bouton Volume Moins (Icône seule) -->
             <button data-key="VOLUME_DOWN" data-capability="audioVolume" class="control-button volume-button w-1/3 py-3 rounded-xl flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M18 13h-4v4h-2v-4H8v-2h4V8h2v4h4v2z"/>
                 </svg>
             </button>
-            <!-- Bouton Volume Plus -->
+            <!-- Bouton Volume Plus (Icône seule) -->
             <button data-key="VOLUME_UP" data-capability="audioVolume" class="control-button volume-button w-1/3 py-3 rounded-xl flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M18 13h-4v4h-2v-4H8v-2h4V8h2v4h4v2z"/>
@@ -255,10 +254,11 @@
                 isSendingCommand = disabled;
             }
 
+            // Fonction de mise à jour du statut, simplifiée pour ne montrer que le message
             function updateStatus(message, isError = false) {
-                statusMessage.className = `p-4 rounded-xl text-center mb-4 text-sm font-medium border ${isError ? 'bg-red-100 text-red-800 border-red-300' : 'bg-indigo-100 text-indigo-800 border-indigo-300'}`;
-                const now = new Date().toLocaleTimeString();
-                statusMessage.innerHTML = `<span class="font-bold">${now}</span>: ${message}`;
+                statusMessage.className = `p-4 rounded-xl text-center mb-8 text-sm font-medium border ${isError ? 'bg-red-100 text-red-800 border-red-300' : 'bg-indigo-100 text-indigo-800 border-indigo-300'}`;
+                // Suppression de l'heure et de la mention "Bienvenue"
+                statusMessage.innerHTML = message;
                 console.log(message);
             }
 
@@ -366,7 +366,8 @@
                 });
             });
 
-            updateStatus("Bienvenue ! L'interface est opérationnelle.");
+            // Initialisation avec le message minimal
+            updateStatus("Prêt.");
         });
     </script>
 </body>
