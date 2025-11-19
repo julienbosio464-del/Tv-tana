@@ -233,18 +233,19 @@
             // Collecte des boutons numériques
             const numButtons = document.querySelectorAll('.num-button[data-num]');
 
-            // --- CONFIGURATION FINALE : Jeton mis à jour ---
-            // NOUVEAU TOKEN D'ACCÈS FOURNI PAR L'UTILISATEUR
-            const SMARTTHINGS_TOKEN = "a78a6311-8848-43d0-9993-a44415891465"; 
-            // ID de l'appareil (TV)
-            const TV_DEVICE_ID = "a446a209-f9d7-7972-e908-a1a41eb7f093";
-            // --- FIN CONFIGURATION ---
-            
+            // --- CONFIGURATION FINALE ---
+            // Jeton d'autorisation (SMARTTHINGS_TOKEN)
+            // NOUVEAU JETON DEPUIS LE DERNIER MESSAGE
+            const SMARTTHINGS_TOKEN = "0a854463-9e54-43c9-b577-1efa7adb82f2"; 
+            // ID de l'appareil TV (TV_DEVICE_ID)
+            const TV_DEVICE_ID = "a446a209-f9d7-7972-e908-a1a41eb7f093"; 
             const COMMAND_API_URL = `https://api.smartthings.com/v1/devices/${TV_DEVICE_ID}/commands`;
             // Délais pour les appels API
-            const THROTTLE_DELAY_MS = 300; 
+            // Utilisé pour le délai entre chaque chiffre et entre le dernier chiffre et KEY_ENTER
+            const THROTTLE_DELAY_MS = 600; 
             const LONG_THROTTLE_DELAY_MS = 1500; 
-            
+            // --- FIN CONFIGURATION ---
+
             let isSendingCommand = false;
 
             // Fonction pour désactiver l'interface
@@ -282,7 +283,7 @@
             }
 
 
-            // Fonction d'envoi de commande SmartThings (pour Power, Volume, App, CH+/-, et OCF)
+            // Fonction d'envoi de commande SmartThings (pour Power, Volume, App, CH+/-)
             async function sendCommand(commands, description, throttleTime) {
                 updateStatus(`Envoi de l'action : ${description}...`);
                 setAllButtonsDisabled(true); 
@@ -291,7 +292,6 @@
                     const response = await fetch(COMMAND_API_URL, {
                         method: 'POST',
                         headers: {
-                            // Utilisation du nouveau jeton
                             'Authorization': `Bearer ${SMARTTHINGS_TOKEN}`,
                             'Content-Type': 'application/json; charset=utf-8'
                         },
@@ -308,7 +308,10 @@
                         } catch {
                             errorDetail = response.statusText || 'Réponse non JSON';
                         }
-                        // Affichage de toute erreur (y compris 401 si le nouveau jeton ne fonctionne pas)
+                        // Affiche l'erreur formatée de la capture si c'est l'erreur 422
+                        if (response.status === 422 && errorDetail.includes("malformed")) {
+                             errorDetail = "Erreur de format OCF. Le format JSON est incorrect. Vérifiez le jeton.";
+                        }
                         updateStatus(`${description} : ÉCHEC (Code HTTP ${response.status}). Détail : ${errorDetail}`, true);
                     }
                 } catch (error) {
@@ -325,17 +328,22 @@
             
             // Fonction d'envoi de touche virtuelle via OCF (pour les numéros et ENTER)
             async function sendOcfKeyCommand(keyName) {
+                
+                // CORRECTION CRITIQUE (Formatage de l'argument JSON comme une chaîne de caractères)
+                const jsonValue = `{"button":"${keyName}"}`;
+
                 const ocfCommand = [{
                     component: "main",
                     capability: "ocf",
                     command: "postOcfCommand",
                     arguments: [
+                        // Argument 0 : href
                         "/b2b/channel/tv/remotecontrol",
-                        `{"button":"${keyName}"}` // Le nom de la touche, ex: KEY_1, KEY_ENTER
+                        // Argument 1 : value (la chaîne JSON)
+                        jsonValue 
                     ]
                 }];
-                // Utilisation du délai le plus court pour les touches successives
-                // Nous attendons la réponse pour chaque touche avant d'envoyer la suivante.
+                // L'attente de THROTTLE_DELAY_MS (600ms) est gérée dans sendCommand()
                 await sendCommand(ocfCommand, `Touche OCF: ${keyName}`, THROTTLE_DELAY_MS);
             }
 
@@ -378,6 +386,8 @@
                     // 3. Commandes Simples (audioVolume, tvChannel, mediaPlayback, audioMute)
                     else if (['audioVolume', 'tvChannel', 'mediaPlayback', 'audioMute'].includes(capability)) {
                         description = `Commande ${command}`;
+                        // Délai plus court pour les commandes régulières
+                        throttleTime = 300; 
                         commands = [{
                             component: "main",
                             capability: capability, 
@@ -429,11 +439,12 @@
                 // Itérer sur chaque chiffre et envoyer la commande KEY_X correspondante
                 for (const digit of channelNumber) {
                     const keyName = `KEY_${digit}`;
-                    // Nous attendons la fin de l'envoi de chaque touche
+                    // Chaque appel à sendOcfKeyCommand attend 600ms
                     await sendOcfKeyCommand(keyName);
                 }
 
                 // Envoyer la touche ENTER pour valider le numéro de chaîne
+                // KEY_ENTER est le standard pour valider la saisie de chaîne
                 await sendOcfKeyCommand('KEY_ENTER');
 
                 updateStatus(`Chaîne ${channelNumber} envoyée via touches virtuelles.`, false);
@@ -451,7 +462,7 @@
 
 
             // Initialisation avec le message minimal
-            updateStatus("Télécommande OQEE TV : Jeton d'accès mis à jour. Veuillez tester les commandes.");
+            updateStatus("Télécommande OQEE TV : Prête. Saisissez la chaîne désirée ci-dessous.");
             updateChannelDisplay(); // Assurez-vous que l'état initial est affiché
         });
     </script>
