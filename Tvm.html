@@ -125,6 +125,26 @@
             </div>
         </div>
         
+        <!-- NOUVEAUX BOUTONS DE TEST -->
+        <div class="flex flex-col space-y-3 mb-6 p-4 bg-yellow-100 rounded-xl border border-yellow-300">
+            <p class="text-sm font-bold text-gray-800 text-center">Diagnostics de Chaîne</p>
+            <div class="flex space-x-3">
+                 <!-- Test 1: setTvChannel -->
+                <button id="test-set-channel-btn" 
+                        data-command="setTvChannel"
+                        data-capability="tvChannel"
+                        class="control-button flex-1 bg-yellow-500 text-white rounded-xl py-3 text-sm font-semibold hover:bg-yellow-600">
+                    TESTER setTvChannel (Chaîne 7)
+                </button>
+                <!-- Test 2: KEY_RETURN (OCF) -->
+                <button id="test-key-return-btn" 
+                        data-key="KEY_RETURN"
+                        class="control-button flex-1 bg-yellow-500 text-white rounded-xl py-3 text-sm font-semibold hover:bg-yellow-600">
+                    TESTER KEY_RETURN (OCF)
+                </button>
+            </div>
+        </div>
+        
         <!-- 2. Commandes de Volume / Chaîne / Mute -->
         <div class="flex justify-around items-center mb-8">
             <!-- Contrôle Volume (audioVolume) -->
@@ -224,24 +244,24 @@
             const channelDisplay = document.getElementById('channel-display');
             const sendChannelBtn = document.getElementById('send-channel-btn');
             const clearChannelBtn = document.getElementById('clear-channel-btn');
+            const testSetChannelBtn = document.getElementById('test-set-channel-btn');
+            const testKeyReturnBtn = document.getElementById('test-key-return-btn');
             
             // État de la saisie de chaîne
             let currentChannelInput = "";
 
             // Collecte de tous les boutons de commande (hors pavé numérique)
-            const controlButtons = document.querySelectorAll('.control-button[data-command], .app-launch-button-style');
+            const controlButtons = document.querySelectorAll('.control-button[data-command], .app-launch-button-style, #test-set-channel-btn, #test-key-return-btn');
             // Collecte des boutons numériques
             const numButtons = document.querySelectorAll('.num-button[data-num]');
 
             // --- CONFIGURATION FINALE ---
             // Jeton d'autorisation (SMARTTHINGS_TOKEN)
-            // NOUVEAU JETON DEPUIS LE DERNIER MESSAGE
             const SMARTTHINGS_TOKEN = "0a854463-9e54-43c9-b577-1efa7adb82f2"; 
             // ID de l'appareil TV (TV_DEVICE_ID)
             const TV_DEVICE_ID = "a446a209-f9d7-7972-e908-a1a41eb7f093"; 
             const COMMAND_API_URL = `https://api.smartthings.com/v1/devices/${TV_DEVICE_ID}/commands`;
             // Délais pour les appels API
-            // Utilisé pour le délai entre chaque chiffre et entre le dernier chiffre et KEY_ENTER
             const THROTTLE_DELAY_MS = 600; 
             const LONG_THROTTLE_DELAY_MS = 1500; 
             // --- FIN CONFIGURATION ---
@@ -310,7 +330,7 @@
                         }
                         // Affiche l'erreur formatée de la capture si c'est l'erreur 422
                         if (response.status === 422 && errorDetail.includes("malformed")) {
-                             errorDetail = "Erreur de format OCF. Le format JSON est incorrect. Vérifiez le jeton.";
+                             errorDetail = `Erreur de format (422 malformed). Le jeton peut être expiré ou la commande mal formée : ${errorDetail}`;
                         }
                         updateStatus(`${description} : ÉCHEC (Code HTTP ${response.status}). Détail : ${errorDetail}`, true);
                     }
@@ -329,7 +349,7 @@
             // Fonction d'envoi de touche virtuelle via OCF (pour les numéros et ENTER)
             async function sendOcfKeyCommand(keyName) {
                 
-                // CORRECTION CRITIQUE (Formatage de l'argument JSON comme une chaîne de caractères)
+                // Formatage de l'argument JSON comme une chaîne de caractères (corrigé)
                 const jsonValue = `{"button":"${keyName}"}`;
 
                 const ocfCommand = [{
@@ -348,7 +368,7 @@
             }
 
 
-            // --- GESTION DES COMMANDES PRINCIPALES (Volume, Power, App, CH+/-) ---
+            // --- GESTION DES COMMANDES PRINCIPALES (Volume, Power, App, CH+/-, et Tests) ---
             controlButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     if (isSendingCommand) return;
@@ -358,6 +378,14 @@
                     let commands;
                     let description;
                     let throttleTime = THROTTLE_DELAY_MS;
+                    
+                    // Gestion du bouton de test KEY_RETURN
+                    if (button.id === 'test-key-return-btn') {
+                        // Envoie KEY_RETURN directement via la fonction OCF
+                        sendOcfKeyCommand('KEY_RETURN');
+                        return; // Arrête le traitement ici
+                    }
+
 
                     // 1. Marche/Arrêt (switch)
                     if (capability === "switch") {
@@ -384,7 +412,7 @@
                         }];
                     }
                     // 3. Commandes Simples (audioVolume, tvChannel, mediaPlayback, audioMute)
-                    else if (['audioVolume', 'tvChannel', 'mediaPlayback', 'audioMute'].includes(capability)) {
+                    else if (['audioVolume', 'mediaPlayback', 'audioMute'].includes(capability)) {
                         description = `Commande ${command}`;
                         // Délai plus court pour les commandes régulières
                         throttleTime = 300; 
@@ -394,6 +422,29 @@
                             command: command, 
                             arguments: [] 
                         }];
+                    }
+                    // 4. Chaîne +/-
+                    else if (capability === 'tvChannel' && (command === 'channelUp' || command === 'channelDown')) {
+                         description = `Commande ${command}`;
+                         throttleTime = 300; 
+                         commands = [{
+                            component: "main",
+                            capability: capability, 
+                            command: command, 
+                            arguments: [] 
+                         }];
+                    }
+                    // 5. TEST setTvChannel (Chaîne 7)
+                    else if (button.id === 'test-set-channel-btn') {
+                         description = "TEST: setTvChannel (Chaîne 7)";
+                         throttleTime = LONG_THROTTLE_DELAY_MS;
+                         commands = [{
+                            component: "main",
+                            capability: "tvChannel", 
+                            command: "setTvChannel", 
+                            // Le setTvChannel attend une chaîne de caractères pour le numéro de chaîne
+                            arguments: ["7"] 
+                         }];
                     }
                     
                     if (commands) {
@@ -433,7 +484,11 @@
                 
                 const channelNumber = currentChannelInput;
                 
-                updateStatus(`Composition de la chaîne ${channelNumber}...`);
+                // Si le test setTvChannel a fonctionné, nous pourrions utiliser :
+                // await sendCommand([{ component: "main", capability: "tvChannel", command: "setTvChannel", arguments: [channelNumber] }], `Chaîne ${channelNumber} via setTvChannel`, LONG_THROTTLE_DELAY_MS);
+                
+                // Pour l'instant, on maintient la séquence OCF pour les numéros, car nous attendons les résultats du test.
+                updateStatus(`Composition de la chaîne ${channelNumber} via OCF...`);
                 setAllButtonsDisabled(true);
 
                 // Itérer sur chaque chiffre et envoyer la commande KEY_X correspondante
@@ -444,7 +499,6 @@
                 }
 
                 // Envoyer la touche ENTER pour valider le numéro de chaîne
-                // KEY_ENTER est le standard pour valider la saisie de chaîne
                 await sendOcfKeyCommand('KEY_ENTER');
 
                 updateStatus(`Chaîne ${channelNumber} envoyée via touches virtuelles.`, false);
@@ -462,7 +516,7 @@
 
 
             // Initialisation avec le message minimal
-            updateStatus("Télécommande OQEE TV : Prête. Saisissez la chaîne désirée ci-dessous.");
+            updateStatus("Télécommande OQEE TV : Prête. NOUVEAUX TESTS DISPONIBLES EN HAUT.");
             updateChannelDisplay(); // Assurez-vous que l'état initial est affiché
         });
     </script>
