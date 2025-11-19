@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Télécommande OQEE TV (V2 - Pavé OK)</title>
+    <title>Télécommande OQEE TV (V3 - Pavé Directionnel)</title>
     <!-- Chargement de Tailwind CSS pour un style moderne et responsive sur mobile -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -102,7 +102,7 @@
 <body class="selection:bg-indigo-200">
     <div id="app-container" class="w-full control-card p-6 rounded-3xl border border-gray-200">
         
-        <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">Télécommande OQEE TV (V2)</h1>
+        <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">Télécommande OQEE TV (V3)</h1>
         
         <!-- 1. Boutons Lancement App & Marche/Arrêt -->
         <div class="flex flex-col space-y-4 mb-8">
@@ -130,7 +130,7 @@
             </div>
         </div>
 
-        <!-- 2. Pavé de Navigation (NOUVEAU - Utilise samsungvd.remoteControl) -->
+        <!-- 2. Pavé de Navigation (NOUVEAU - Utilise samsungvd.remoteControl.keyEvent) -->
         <div class="flex justify-center mb-8">
             <div class="nav-grid grid grid-cols-3 gap-2 p-4 bg-gray-200 rounded-2xl shadow-inner border border-gray-300">
                 <!-- UP -->
@@ -221,7 +221,7 @@
 
         <!-- ENCART DE STATUT EN BAS -->
         <div id="status-message" class="bg-gray-200 text-gray-700 p-3 rounded-xl text-center text-sm font-medium border border-gray-300 mt-6">
-            ✅ Télécommande fonctionnelle.
+            ✅ Télécommande prête. Nouvelle tentative pour le pavé directionnel.
         </div>
     </div>
 
@@ -320,15 +320,15 @@
                     let description;
                     let throttleTime = THROTTLE_DELAY_MS;
                     
-                    // 1. Pavé de Navigation (samsungvd.remoteControl)
+                    // 1. Pavé de Navigation (samsungvd.remoteControl) -> TENTATIVE 2: keyEvent
                     if (capability === "samsungvd.remoteControl") {
                         description = `Touche de Navigation (${keyCode})`;
                         throttleTime = 300; 
                         commands = [{
                             component: "main",
                             capability: "samsungvd.remoteControl",
-                            command: "sendKey", // Commande pour envoyer la touche
-                            arguments: [keyCode, "PRESSED"] // Le keyCode et l'état "PRESSED" (Appuyé)
+                            command: "keyEvent", // On teste 'keyEvent' comme commande
+                            arguments: [keyCode] // Et seulement le keyCode
                         }];
                     } 
                     // 2. Marche/Arrêt (switch)
@@ -375,7 +375,7 @@
             });
 
             // Initialisation
-            updateStatus("✅ Télécommande prête. Le pavé directionnel a été réactivé.");
+            updateStatus("✅ Télécommande prête. Nouvelle tentative pour le pavé directionnel.");
         });
     </script>
 </body>
