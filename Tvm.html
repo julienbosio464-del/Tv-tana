@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Télécommande OQEE TV (V3 - Pavé Directionnel)</title>
+    <title>Télécommande OQEE TV (V5 - Press/Release)</title>
     <!-- Chargement de Tailwind CSS pour un style moderne et responsive sur mobile -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -102,7 +102,7 @@
 <body class="selection:bg-indigo-200">
     <div id="app-container" class="w-full control-card p-6 rounded-3xl border border-gray-200">
         
-        <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">Télécommande OQEE TV (V3)</h1>
+        <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">Télécommande OQEE TV (V5)</h1>
         
         <!-- 1. Boutons Lancement App & Marche/Arrêt -->
         <div class="flex flex-col space-y-4 mb-8">
@@ -130,7 +130,7 @@
             </div>
         </div>
 
-        <!-- 2. Pavé de Navigation (NOUVEAU - Utilise samsungvd.remoteControl.keyEvent) -->
+        <!-- 2. Pavé de Navigation (NOUVEAU - TENTATIVE 5: keyEvent + PRESS/RELEASE) -->
         <div class="flex justify-center mb-8">
             <div class="nav-grid grid grid-cols-3 gap-2 p-4 bg-gray-200 rounded-2xl shadow-inner border border-gray-300">
                 <!-- UP -->
@@ -221,7 +221,7 @@
 
         <!-- ENCART DE STATUT EN BAS -->
         <div id="status-message" class="bg-gray-200 text-gray-700 p-3 rounded-xl text-center text-sm font-medium border border-gray-300 mt-6">
-            ✅ Télécommande prête. Nouvelle tentative pour le pavé directionnel.
+            ✅ Télécommande prête. Nouvelle tentative pour le pavé : Séquence PRESS/RELEASE.
         </div>
     </div>
 
@@ -266,36 +266,53 @@
                 console.log(message);
             }
 
-            // Fonction d'envoi de commande SmartThings
+            // Fonction d'envoi de commande SmartThings (unique)
+            async function sendSingleCommand(commands) {
+                const response = await fetch(COMMAND_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${SMARTTHINGS_TOKEN}`,
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    body: JSON.stringify({ commands: commands })
+                });
+
+                if (!response.ok) {
+                    let errorDetail = '';
+                    try {
+                        const errorData = await response.json();
+                        errorDetail = errorData.message || JSON.stringify(errorData, null, 2);
+                    } catch {
+                        errorDetail = response.statusText || 'Réponse non JSON';
+                    }
+                    throw new Error(`Échec (Code HTTP ${response.status}). Détail : ${errorDetail}`);
+                }
+            }
+
+
+            // Fonction d'envoi de commande SmartThings (principale)
             async function sendCommand(commands, description, throttleTime) {
                 updateStatus(`Envoi de l'action : ${description}...`);
                 setAllButtonsDisabled(true); 
 
                 try {
-                    const response = await fetch(COMMAND_API_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${SMARTTHINGS_TOKEN}`,
-                            'Content-Type': 'application/json; charset=utf-8'
-                        },
-                        body: JSON.stringify({ commands: commands })
-                    });
-
-                    if (response.ok) {
-                        updateStatus(`✅ ${description} : Commande envoyée avec succès.`, false);
+                    // Pour les commandes normales, nous envoyons simplement
+                    if (!Array.isArray(commands)) {
+                         await sendSingleCommand(commands);
                     } else {
-                        let errorDetail = '';
-                        try {
-                            const errorData = await response.json();
-                            errorDetail = errorData.message || JSON.stringify(errorData, null, 2);
-                        } catch {
-                            errorDetail = response.statusText || 'Réponse non JSON';
-                        }
-                        
-                        updateStatus(`❌ ${description} : ÉCHEC (Code HTTP ${response.status}). Détail : ${errorDetail}`, true);
+                         // Pour les touches (Press/Release), 'commands' est un tableau de commandes séquentielles
+                         for (const cmd of commands) {
+                            await sendSingleCommand(cmd);
+                            // Petit délai entre PRESS et RELEASE pour la TV
+                            if (cmd[0]?.arguments?.[1] === "PRESSED") {
+                                await new Promise(resolve => setTimeout(resolve, 50)); 
+                            }
+                         }
                     }
+
+                    updateStatus(`✅ ${description} : Commande(s) envoyée(s) avec succès.`, false);
                 } catch (error) {
-                    updateStatus(`❌ Erreur réseau (Fetch) : ${error.message}`, true);
+                    updateStatus(`❌ ${description} : ${error.message}`, true);
                 } finally {
                     // Libérer l'interface après le délai d'attente
                     setTimeout(() => {
@@ -320,16 +337,26 @@
                     let description;
                     let throttleTime = THROTTLE_DELAY_MS;
                     
-                    // 1. Pavé de Navigation (samsungvd.remoteControl) -> TENTATIVE 2: keyEvent
+                    // 1. Pavé de Navigation (samsungvd.remoteControl) -> TENTATIVE 5: keyEvent + PRESS/RELEASE
                     if (capability === "samsungvd.remoteControl") {
                         description = `Touche de Navigation (${keyCode})`;
                         throttleTime = 300; 
-                        commands = [{
-                            component: "main",
-                            capability: "samsungvd.remoteControl",
-                            command: "keyEvent", // On teste 'keyEvent' comme commande
-                            arguments: [keyCode] // Et seulement le keyCode
-                        }];
+
+                        // Séquence PRESS et RELEASE
+                        commands = [
+                            [{
+                                component: "main",
+                                capability: "samsungvd.remoteControl",
+                                command: "keyEvent", // On revient à keyEvent car c'est le standard pour le cycle
+                                arguments: [keyCode, "PRESSED"] // [Clé, État]
+                            }],
+                            [{
+                                component: "main",
+                                capability: "samsungvd.remoteControl",
+                                command: "keyEvent",
+                                arguments: [keyCode, "RELEASED"] // [Clé, État]
+                            }]
+                        ];
                     } 
                     // 2. Marche/Arrêt (switch)
                     else if (capability === "switch") {
@@ -375,7 +402,7 @@
             });
 
             // Initialisation
-            updateStatus("✅ Télécommande prête. Nouvelle tentative pour le pavé directionnel.");
+            updateStatus("✅ Télécommande prête. Nouvelle tentative pour le pavé : Séquence PRESS/RELEASE.");
         });
     </script>
 </body>
