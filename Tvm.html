@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Télécommande OQEE TV (V5 - Finale)</title>
+    <title>Télécommande OQEE TV (V5 - Jeton E0D3)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { font-family: 'Inter', sans-serif; }
@@ -112,7 +112,7 @@
             const controlButtons = document.querySelectorAll('.control-button');
 
             // --- CONFIGURATION MISE A JOUR ---
-            const SMARTTHINGS_TOKEN = "ed205fc6-b8c4-49df-993c-126f594b2b5a"; 
+            const SMARTTHINGS_TOKEN = "e0d3e9e3-8cb6-4262-b867-11496b450832"; 
             const TV_DEVICE_ID = "a446a209-f9d7-7972-e908-a1a41eb7f093"; 
             const COMMAND_API_URL = `https://api.smartthings.com/v1/devices/${TV_DEVICE_ID}/commands`;
             
@@ -227,7 +227,7 @@
                 });
             });
 
-            updateStatus("✅ Télécommande prête (Token mis à jour).");
+            updateStatus("✅ Télécommande prête (Jeton mis à jour : e0d3).");
         });
     </script>
 </body>
