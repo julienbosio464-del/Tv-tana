@@ -225,7 +225,7 @@
         </div>
     </div>
 
-    <script>
+    <cript>
         document.addEventListener('DOMContentLoaded', () => {
             const statusMessage = document.getElementById('status-message');
             
@@ -394,17 +394,138 @@
                     }
                     
                     if (commands) {
-                        sendCommand(commands, description, throttleTime);
-                    } else {
-                        updateStatus("❌ Erreur: Type de bouton inconnu ou non implémenté.", true);
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const statusMessage = document.getElementById('status-message');
+            const controlButtons = document.querySelectorAll('.control-button');
+
+            // --- CONFIGURATION ---
+            const SMARTTHINGS_TOKEN = "0a854463-9e54-43c9-b577-1efa7adb82f2"; 
+            const TV_DEVICE_ID = "a446a209-f9d7-7972-e908-a1a41eb7f093"; 
+            const COMMAND_API_URL = `https://api.smartthings.com/v1/devices/${TV_DEVICE_ID}/commands`;
+            
+            let isSendingCommand = false;
+
+            function setAllButtonsDisabled(disabled) {
+                controlButtons.forEach(btn => btn.classList.toggle('loading', disabled));
+                isSendingCommand = disabled;
+            }
+
+            function updateStatus(message, isError = false) {
+                const baseClass = "p-3 rounded-xl text-center text-sm font-medium border mt-6";
+                if (isError) {
+                    statusMessage.className = `${baseClass} bg-red-100 text-red-800 border-red-300`;
+                } else if (message.includes('succès')) {
+                    statusMessage.className = `${baseClass} bg-green-100 text-green-800 border-green-300`;
+                } else {
+                    statusMessage.className = `${baseClass} bg-gray-200 text-gray-700 border-gray-300`;
+                }
+                statusMessage.innerHTML = message;
+                console.log(message);
+            }
+
+            async function sendApiRequest(commandBody) {
+                const response = await fetch(COMMAND_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${SMARTTHINGS_TOKEN}`,
+                        'Content-Type': 'application/json; charset=utf-8'
+                    },
+                    body: JSON.stringify({ commands: commandBody })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.message || `Erreur HTTP ${response.status}`);
+                }
+            }
+
+            async function sendCommand(commands, description, throttleTime = 500) {
+                if (isSendingCommand) return;
+                
+                updateStatus(`Envoi : ${description}...`);
+                setAllButtonsDisabled(true); 
+
+                try {
+                    // Envoi direct de la commande (pas de boucle press/release nécessaire pour l'API HTTP)
+                    await sendApiRequest(commands);
+                    updateStatus(`✅ ${description} : succès.`, false);
+                } catch (error) {
+                    updateStatus(`❌ Erreur : ${error.message}`, true);
+                } finally {
+                    setTimeout(() => {
+                        setAllButtonsDisabled(false);
+                        updateStatus("✅ Prêt.");
+                    }, throttleTime);
+                }
+            }
+
+            controlButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const command = button.getAttribute('data-command'); 
+                    const capability = button.getAttribute('data-capability');
+                    const keyName = button.getAttribute('data-key'); 
+                    const keyCode = button.getAttribute('data-key-code');
+                    
+                    let commandsBody = [];
+                    let description = "";
+                    let throttle = 300; // Délai par défaut plus court pour la réactivité
+
+                    // 1. NAVIGATION (CORRECTION MAJEURE ICI)
+                    // On utilise la commande 'send' au lieu de keyEvent/Pressed
+                    if (capability === "samsungvd.remoteControl") {
+                        description = `Touche ${keyCode}`;
+                        commandsBody = [{
+                            component: "main",
+                            capability: "samsungvd.remoteControl",
+                            command: "send",  // C'est LA commande standard
+                            arguments: [keyCode] 
+                        }];
+                    } 
+                    // 2. ON / OFF
+                    else if (capability === "switch") {
+                        description = (keyName === 'on' ? "Allumer" : "Éteindre");
+                        throttle = 2000; // Délai plus long pour le ON/OFF
+                        commandsBody = [{
+                            component: "main",
+                            capability: "switch", 
+                            command: keyName,
+                            arguments: []
+                        }];
+                    } 
+                    // 3. LANCEMENT APP
+                    else if (capability === "custom.launchapp") {
+                        const appId = button.getAttribute('data-app-id');
+                        description = "Lancement OQEE";
+                        throttle = 2000;
+                        commandsBody = [{
+                            component: "main",
+                            capability: "custom.launchapp",
+                            command: "launchApp",
+                            arguments: [appId]
+                        }];
+                    }
+                    // 4. COMMANDES STANDARDS (Volume, Channel, Media)
+                    else {
+                        description = command;
+                        commandsBody = [{
+                            component: "main",
+                            capability: capability, 
+                            command: command, 
+                            arguments: [] 
+                        }];
+                    }
+                    
+                    if (commandsBody.length > 0) {
+                        sendCommand(commandsBody, description, throttle);
                     }
                 });
             });
 
-            // Initialisation
-            updateStatus("✅ Télécommande prête. Nouvelle tentative pour le pavé : Séquence PRESS/RELEASE.");
+            updateStatus("✅ Télécommande chargée (Mode Correctif: send command).");
         });
     </script>
+
 </body>
 </html>
 
