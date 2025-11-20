@@ -3,397 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Télécommande OQEE TV (V5 - Press/Release)</title>
-    <!-- Chargement de Tailwind CSS pour un style moderne et responsive sur mobile -->
+    <title>Télécommande OQEE TV (V5 - Finale)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Configuration de la police et du design mobile-first */
-        :root {
-            font-family: 'Inter', sans-serif;
-        }
-        body {
-            background-color: #eef2f6; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 16px;
-        }
-        .control-card {
-            background: linear-gradient(145deg, #ffffff, #f0f4f8);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15), 0 5px 15px rgba(0, 0, 0, 0.05);
-            max-width: 400px;
-        }
-        .control-button {
-            transition: all 0.15s ease-in-out;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
-            border: 1px solid #d1d5db;
-        }
-        .control-button:active {
-            transform: translateY(1px);
-            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
-        }
+        :root { font-family: 'Inter', sans-serif; }
+        body { background-color: #eef2f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 16px; }
+        .control-card { background: linear-gradient(145deg, #ffffff, #f0f4f8); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15), 0 5px 15px rgba(0, 0, 0, 0.05); max-width: 400px; }
+        .control-button { transition: all 0.15s ease-in-out; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06); border: 1px solid #d1d5db; }
+        .control-button:active { transform: translateY(1px); box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1); }
         
-        /* STYLE : Bouton TV/Lancement App (Bleu) */
-        .app-launch-button-style {
-            background-color: #3B82F6; 
-            color: white;
-            font-weight: 700;
-            font-size: 1.5rem; 
-            height: 70px;
-            box-shadow: 0 6px 15px -3px rgba(59, 130, 246, 0.4);
-            letter-spacing: 0.05em;
-        }
+        /* STYLE : Boutons Spécifiques */
+        .app-launch-button-style { background-color: #3B82F6; color: white; font-weight: 700; font-size: 1.5rem; height: 70px; box-shadow: 0 6px 15px -3px rgba(59, 130, 246, 0.4); letter-spacing: 0.05em; }
         .app-launch-button-style:active { background-color: #2563EB; }
-
-        /* STYLE : Boutons Marche/Arrêt */
         .power-on-style { background-color: #10B981; color: white; font-weight: 600; }
         .power-off-style { background-color: #EF4444; color: white; font-weight: 600; }
 
         /* STYLE : Pavé de Navigation */
-        .nav-grid {
-            grid-template-areas:
-                ". up ."
-                "left ok right"
-                ". down .";
-            width: 200px;
-            height: 200px;
-        }
-        .nav-btn {
-            background-color: #4f46e5; /* Indigo */
-            color: white;
-            font-size: 1.25rem;
-            border: none;
-        }
-        .nav-btn:active {
-            background-color: #4338ca;
-        }
-        .nav-btn-ok {
-            background-color: #10b981; /* Émeraude */
-        }
-        .nav-btn-ok:active {
-            background-color: #059669;
-        }
+        .nav-grid { grid-template-areas: ". up ." "left ok right" ". down ."; width: 200px; height: 200px; }
+        .nav-btn { background-color: #4f46e5; color: white; font-size: 1.25rem; border: none; }
+        .nav-btn:active { background-color: #4338ca; }
+        .nav-btn-ok { background-color: #10b981; }
+        .nav-btn-ok:active { background-color: #059669; }
         
-        /* STYLE : Boutons Volume & Chaîne (Ronds) */
-        .round-button {
-             width: 70px; height: 70px; border-radius: 9999px;
-             display: flex; flex-direction: column; align-items: center; justify-content: center;
-             padding: 4px;
-        }
-        .volume-button {
-             background-color: #fcd34d; 
-             color: #4b5563; font-weight: bold;
-        }
+        /* STYLE : Ronds & Média */
+        .round-button { width: 70px; height: 70px; border-radius: 9999px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4px; }
+        .volume-button { background-color: #fcd34d; color: #4b5563; font-weight: bold; }
         .volume-button:active { background-color: #fbbf24; }
-        
-        /* STYLE : Touches Essentielles et Média */
-        .essential-button {
-            background-color: #ffffff; color: #374151; font-size: 1.1rem; height: 60px; 
-            padding-top: 8px; padding-bottom: 8px; 
-        }
+        .essential-button { background-color: #ffffff; color: #374151; font-size: 1.1rem; height: 60px; padding: 8px 0; }
         .essential-button:active { background-color: #f3f4f6; }
-
-        .loading {
-            cursor: not-allowed; opacity: 0.6; pointer-events: none;
-        }
+        .loading { cursor: not-allowed; opacity: 0.6; pointer-events: none; }
     </style>
 </head>
 <body class="selection:bg-indigo-200">
     <div id="app-container" class="w-full control-card p-6 rounded-3xl border border-gray-200">
         
-        <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">Télécommande OQEE TV (V5)</h1>
+        <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">Télécommande OQEE TV</h1>
         
-        <!-- 1. Boutons Lancement App & Marche/Arrêt -->
         <div class="flex flex-col space-y-4 mb-8">
-            <!-- Bouton Lancement Direct OQEE (TV - Bleu) -->
-            <button id="launch-oqee-btn" 
-                    data-app-id="znCs95n93Q.OqeeTV" 
-                    data-capability="custom.launchapp" 
+            <button id="launch-oqee-btn" data-app-id="znCs95n93Q.OqeeTV" data-capability="custom.launchapp" 
                     class="control-button app-launch-button-style w-full rounded-2xl flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-2" viewBox="0 0 24 24" fill="currentColor"><path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-10 11H9v2H7v-6h4v2zm5-2h-2V9h-2v2h-2v2h2v2h2v-2h2v-2z"/></svg>
                 <span>LANCER OQEE TV</span> 
             </button>
             
             <div class="flex justify-between space-x-4">
-                <!-- Bouton Allumer (Vert) -->
                 <button data-key="on" data-capability="switch" class="control-button power-on-style w-1/2 rounded-2xl flex items-center justify-center space-x-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M13 3h-2v10h2V3zM12 11c-4.411 0-8 3.589-8 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zm0 14c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z"/></svg>
                     <span>ALLUMER</span>
                 </button>
-
-                <!-- Bouton Éteindre (Rouge) -->
                 <button data-key="off" data-capability="switch" class="control-button power-off-style w-1/2 rounded-2xl flex items-center justify-center space-x-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M13 3h-2v10h2V3zM12 11c-4.411 0-8 3.589-8 8s3.589 8 8 8 8-3.589 8-8-3.589-8-8-8zm0 14c-3.309 0-6-2.691-6-6s2.691-6 6-6 6 2.691 6 6-2.691 6-6 6z"/></svg>
                     <span>ÉTEINDRE</span>
                 </button>
             </div>
         </div>
 
-        <!-- 2. Pavé de Navigation (NOUVEAU - TENTATIVE 5: keyEvent + PRESS/RELEASE) -->
         <div class="flex justify-center mb-8">
             <div class="nav-grid grid grid-cols-3 gap-2 p-4 bg-gray-200 rounded-2xl shadow-inner border border-gray-300">
-                <!-- UP -->
-                <button data-key-code="UP" data-capability="samsungvd.remoteControl" 
-                        class="control-button nav-btn rounded-full h-12 w-12" style="grid-area: up;">
+                <button data-key-code="UP" data-capability="samsungvd.remoteControl" class="control-button nav-btn rounded-full h-12 w-12" style="grid-area: up;">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto" viewBox="0 0 24 24" fill="currentColor"><path d="M7 14l5-5 5 5z"/></svg>
                 </button>
-                
-                <!-- LEFT -->
-                <button data-key-code="LEFT" data-capability="samsungvd.remoteControl" 
-                        class="control-button nav-btn rounded-full h-12 w-12" style="grid-area: left;">
+                <button data-key-code="LEFT" data-capability="samsungvd.remoteControl" class="control-button nav-btn rounded-full h-12 w-12" style="grid-area: left;">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto" viewBox="0 0 24 24" fill="currentColor"><path d="M14 7l-5 5 5 5z"/></svg>
                 </button>
-                
-                <!-- ENTER (OK) -->
-                <button data-key-code="ENTER" data-capability="samsungvd.remoteControl" 
-                        class="control-button nav-btn-ok rounded-full h-12 w-12 text-sm font-bold" style="grid-area: ok;">
-                    OK
-                </button>
-                
-                <!-- RIGHT -->
-                <button data-key-code="RIGHT" data-capability="samsungvd.remoteControl" 
-                        class="control-button nav-btn rounded-full h-12 w-12" style="grid-area: right;">
+                <button data-key-code="ENTER" data-capability="samsungvd.remoteControl" class="control-button nav-btn-ok rounded-full h-12 w-12 text-sm font-bold" style="grid-area: ok;">OK</button>
+                <button data-key-code="RIGHT" data-capability="samsungvd.remoteControl" class="control-button nav-btn rounded-full h-12 w-12" style="grid-area: right;">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto" viewBox="0 0 24 24" fill="currentColor"><path d="M10 17l5-5-5-5z"/></svg>
                 </button>
-                
-                <!-- DOWN -->
-                <button data-key-code="DOWN" data-capability="samsungvd.remoteControl" 
-                        class="control-button nav-btn rounded-full h-12 w-12" style="grid-area: down;">
+                <button data-key-code="DOWN" data-capability="samsungvd.remoteControl" class="control-button nav-btn rounded-full h-12 w-12" style="grid-area: down;">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>
                 </button>
             </div>
         </div>
 
-        <!-- 3. Commandes de Volume / Chaîne / Mute -->
         <div class="flex justify-around items-center mb-8 bg-white p-4 rounded-xl shadow-inner border border-gray-100">
-            <!-- Contrôle Volume -->
             <div class="flex flex-col space-y-2 items-center">
-                <span class="text-xs font-semibold text-gray-500">VOLUME</span>
-                <button data-command="volumeUp" data-capability="audioVolume" class="control-button volume-button round-button w-[60px] h-[60px]">
-                    <span class="text-xl font-black">+</span>
-                </button>
-                <button data-command="volumeDown" data-capability="audioVolume" class="control-button volume-button round-button w-[60px] h-[60px]">
-                    <span class="text-xl font-black">-</span>
-                </button>
+                <span class="text-xs font-semibold text-gray-500">VOL</span>
+                <button data-command="volumeUp" data-capability="audioVolume" class="control-button volume-button round-button w-[60px] h-[60px]"><span class="text-xl font-black">+</span></button>
+                <button data-command="volumeDown" data-capability="audioVolume" class="control-button volume-button round-button w-[60px] h-[60px]"><span class="text-xl font-black">-</span></button>
             </div>
-            
-            <!-- Mute -->
             <div class="flex flex-col space-y-2 items-center">
                 <span class="text-xs font-semibold text-gray-500">MUTE</span>
                 <button data-command="mute" data-capability="audioMute" class="control-button essential-button rounded-full w-[80px] h-[80px] flex items-center justify-center bg-gray-200 hover:bg-gray-300">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-700" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .9-.22 1.74-.63 2.5l1.63 1.63c.66-1.09 1.05-2.35 1.05-3.63 0-4.31-3.52-7.9-7.84-7.9-.55 0-1.07.09-1.57.24l2.12 2.12c.31-.05.63-.08.95-.08 2.07 0 3.75 1.68 3.75 3.75zm-9.98 0l-4.42-4.42-1.41 1.41L5 12l-1.41 1.41 1.41 1.41 4.42-4.42zM5 12h2v.5h-2z"/></svg>
                 </button>
-                 <div class="w-[60px] h-[20px]"></div>
             </div>
-            
-            <!-- Contrôle Chaîne +/- -->
             <div class="flex flex-col space-y-2 items-center">
-                <span class="text-xs font-semibold text-gray-500">CHAÎNE</span>
-                 <button data-command="channelUp" data-capability="tvChannel" class="control-button app-launch-button-style round-button w-[60px] h-[60px] flex flex-col justify-center items-center bg-green-500 hover:bg-green-600">
-                    <span class="text-xl font-black">CH+</span>
-                 </button>
-                 <button data-command="channelDown" data-capability="tvChannel" class="control-button app-launch-button-style round-button w-[60px] h-[60px] flex flex-col justify-center items-center bg-green-500 hover:bg-green-600">
-                    <span class="text-xl font-black">CH-</span>
-                 </button>
+                <span class="text-xs font-semibold text-gray-500">CH</span>
+                 <button data-command="channelUp" data-capability="tvChannel" class="control-button app-launch-button-style round-button w-[60px] h-[60px] bg-green-500 hover:bg-green-600"><span class="text-xl font-black">P+</span></button>
+                 <button data-command="channelDown" data-capability="tvChannel" class="control-button app-launch-button-style round-button w-[60px] h-[60px] bg-green-500 hover:bg-green-600"><span class="text-xl font-black">P-</span></button>
             </div>
         </div>
 
-        <!-- 4. Touches Media -->
         <div class="mt-8 p-4 bg-gray-100 rounded-xl border border-gray-200">
-             <p class="text-sm font-semibold text-gray-600 mb-3 text-center">CONTRÔLES MÉDIA</p>
             <div class="flex justify-between items-center space-x-2">
-                
-                <button data-command="rewind" data-capability="mediaPlayback" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center h-12 bg-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M11 6v12l-5.5-3.5L11 6zm7.5 0L13 9.5 18.5 6V3H21v18h-2V6z"/></svg>
-                </button>
-                <button data-command="play" data-capability="mediaPlayback" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center h-12 bg-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-                </button>
-                <button data-command="pause" data-capability="mediaPlayback" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center h-12 bg-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-                </button>
-                <button data-command="fastForward" data-capability="mediaPlayback" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center h-12 bg-white">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M13 18V6l5.5 3.5L13 18zm-7.5 0L11 14.5 5.5 18V3H3v18h2V6z"/></svg>
-                </button>
+                <button data-command="rewind" data-capability="mediaPlayback" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center h-12 bg-white">REW</button>
+                <button data-command="play" data-capability="mediaPlayback" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center h-12 bg-white">PLAY</button>
+                <button data-command="pause" data-capability="mediaPlayback" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center h-12 bg-white">PAUSE</button>
+                <button data-command="fastForward" data-capability="mediaPlayback" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center h-12 bg-white">FF</button>
             </div>
         </div>
 
-        <!-- ENCART DE STATUT EN BAS -->
         <div id="status-message" class="bg-gray-200 text-gray-700 p-3 rounded-xl text-center text-sm font-medium border border-gray-300 mt-6">
-            ✅ Télécommande prête. Nouvelle tentative pour le pavé : Séquence PRESS/RELEASE.
+            Initialisation...
         </div>
     </div>
 
-    <cript>
-        document.addEventListener('DOMContentLoaded', () => {
-            const statusMessage = document.getElementById('status-message');
-            
-            // Collecte de tous les boutons de commande
-            const controlButtons = document.querySelectorAll('.control-button');
-
-            // --- CONFIGURATION FINALE ---
-            // Jeton d'autorisation (SMARTTHINGS_TOKEN)
-            const SMARTTHINGS_TOKEN = "0a854463-9e54-43c9-b577-1efa7adb82f2"; 
-            // ID de l'appareil TV (TV_DEVICE_ID)
-            const TV_DEVICE_ID = "a446a209-f9d7-7972-e908-a1a41eb7f093"; 
-            const COMMAND_API_URL = `https://api.smartthings.com/v1/devices/${TV_DEVICE_ID}/commands`;
-            // Délais pour les appels API
-            const THROTTLE_DELAY_MS = 600; 
-            const LONG_THROTTLE_DELAY_MS = 1500; 
-            // --- FIN CONFIGURATION ---
-
-            let isSendingCommand = false;
-
-            // Fonction pour désactiver l'interface
-            function setAllButtonsDisabled(disabled) {
-                controlButtons.forEach(btn => btn.classList.toggle('loading', disabled));
-                isSendingCommand = disabled;
-            }
-
-            // Fonction de mise à jour du statut
-            function updateStatus(message, isError = false) {
-                // Adapte le style du message pour l'état de réussite ou d'erreur
-                const baseClass = "p-3 rounded-xl text-center text-sm font-medium border mt-6";
-                if (isError) {
-                    statusMessage.className = `${baseClass} bg-red-100 text-red-800 border-red-300`;
-                } else if (message.includes('succès')) {
-                    statusMessage.className = `${baseClass} bg-green-100 text-green-800 border-green-300`;
-                } else {
-                    statusMessage.className = `${baseClass} bg-gray-200 text-gray-700 border-gray-300`;
-                }
-                statusMessage.innerHTML = message;
-                console.log(message);
-            }
-
-            // Fonction d'envoi de commande SmartThings (unique)
-            async function sendSingleCommand(commands) {
-                const response = await fetch(COMMAND_API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${SMARTTHINGS_TOKEN}`,
-                        'Content-Type': 'application/json; charset=utf-8'
-                    },
-                    body: JSON.stringify({ commands: commands })
-                });
-
-                if (!response.ok) {
-                    let errorDetail = '';
-                    try {
-                        const errorData = await response.json();
-                        errorDetail = errorData.message || JSON.stringify(errorData, null, 2);
-                    } catch {
-                        errorDetail = response.statusText || 'Réponse non JSON';
-                    }
-                    throw new Error(`Échec (Code HTTP ${response.status}). Détail : ${errorDetail}`);
-                }
-            }
-
-
-            // Fonction d'envoi de commande SmartThings (principale)
-            async function sendCommand(commands, description, throttleTime) {
-                updateStatus(`Envoi de l'action : ${description}...`);
-                setAllButtonsDisabled(true); 
-
-                try {
-                    // Pour les commandes normales, nous envoyons simplement
-                    if (!Array.isArray(commands)) {
-                         await sendSingleCommand(commands);
-                    } else {
-                         // Pour les touches (Press/Release), 'commands' est un tableau de commandes séquentielles
-                         for (const cmd of commands) {
-                            await sendSingleCommand(cmd);
-                            // Petit délai entre PRESS et RELEASE pour la TV
-                            if (cmd[0]?.arguments?.[1] === "PRESSED") {
-                                await new Promise(resolve => setTimeout(resolve, 50)); 
-                            }
-                         }
-                    }
-
-                    updateStatus(`✅ ${description} : Commande(s) envoyée(s) avec succès.`, false);
-                } catch (error) {
-                    updateStatus(`❌ ${description} : ${error.message}`, true);
-                } finally {
-                    // Libérer l'interface après le délai d'attente
-                    setTimeout(() => {
-                        setAllButtonsDisabled(false);
-                        updateStatus("✅ Télécommande prête.");
-                    }, throttleTime);
-                }
-            }
-
-
-            // --- GESTION DES COMMANDES ---
-            controlButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    if (isSendingCommand) return;
-                    
-                    const command = button.getAttribute('data-command'); 
-                    const capability = button.getAttribute('data-capability');
-                    const keyName = button.getAttribute('data-key'); 
-                    const keyCode = button.getAttribute('data-key-code'); // Nouveau pour remoteControl
-                    
-                    let commands;
-                    let description;
-                    let throttleTime = THROTTLE_DELAY_MS;
-                    
-                    // 1. Pavé de Navigation (samsungvd.remoteControl) -> TENTATIVE 5: keyEvent + PRESS/RELEASE
-                    if (capability === "samsungvd.remoteControl") {
-                        description = `Touche de Navigation (${keyCode})`;
-                        throttleTime = 300; 
-
-                        // Séquence PRESS et RELEASE
-                        commands = [
-                            [{
-                                component: "main",
-                                capability: "samsungvd.remoteControl",
-                                command: "keyEvent", // On revient à keyEvent car c'est le standard pour le cycle
-                                arguments: [keyCode, "PRESSED"] // [Clé, État]
-                            }],
-                            [{
-                                component: "main",
-                                capability: "samsungvd.remoteControl",
-                                command: "keyEvent",
-                                arguments: [keyCode, "RELEASED"] // [Clé, État]
-                            }]
-                        ];
-                    } 
-                    // 2. Marche/Arrêt (switch)
-                    else if (capability === "switch") {
-                        description = (keyName === 'on' ? "Allumer la TV" : "Éteindre la TV");
-                        throttleTime = LONG_THROTTLE_DELAY_MS;
-                        commands = [{
-                            component: "main",
-                            capability: "switch", 
-                            command: keyName, // 'on' ou 'off'
-                            arguments: []
-                        }];
-                    } 
-                    // 3. Lancement d'App (custom.launchapp)
-                    else if (capability === "custom.launchapp") {
-                        const appId = button.getAttribute('data-app-id');
-                        description = "Lancement OQEE TV";
-                        throttleTime = LONG_THROTTLE_DELAY_MS;
-                        commands = [{
-                            component: "main",
-                            capability: "custom.launchapp",
-                            command: "launchApp",
-                            arguments: [appId]
-                        }];
-                    }
-                    // 4. Commandes Simples (audioVolume, tvChannel, mediaPlayback, audioMute)
-                    else if (['audioVolume', 'mediaPlayback', 'audioMute', 'tvChannel'].includes(capability)) {
-                        description = `Commande ${command}`;
-                        throttleTime = 300; 
-                        commands = [{
-                            component: "main",
-                            capability: capability, 
-                            command: command, 
-                            arguments: [] 
-                        }];
-                    }
-                    
-                    if (commands) {
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const statusMessage = document.getElementById('status-message');
@@ -421,7 +133,6 @@
                     statusMessage.className = `${baseClass} bg-gray-200 text-gray-700 border-gray-300`;
                 }
                 statusMessage.innerHTML = message;
-                console.log(message);
             }
 
             async function sendApiRequest(commandBody) {
@@ -447,7 +158,6 @@
                 setAllButtonsDisabled(true); 
 
                 try {
-                    // Envoi direct de la commande (pas de boucle press/release nécessaire pour l'API HTTP)
                     await sendApiRequest(commands);
                     updateStatus(`✅ ${description} : succès.`, false);
                 } catch (error) {
@@ -469,23 +179,20 @@
                     
                     let commandsBody = [];
                     let description = "";
-                    let throttle = 300; // Délai par défaut plus court pour la réactivité
+                    let throttle = 300; 
 
-                    // 1. NAVIGATION (CORRECTION MAJEURE ICI)
-                    // On utilise la commande 'send' au lieu de keyEvent/Pressed
                     if (capability === "samsungvd.remoteControl") {
                         description = `Touche ${keyCode}`;
                         commandsBody = [{
                             component: "main",
                             capability: "samsungvd.remoteControl",
-                            command: "send",  // C'est LA commande standard
+                            command: "send", 
                             arguments: [keyCode] 
                         }];
                     } 
-                    // 2. ON / OFF
                     else if (capability === "switch") {
                         description = (keyName === 'on' ? "Allumer" : "Éteindre");
-                        throttle = 2000; // Délai plus long pour le ON/OFF
+                        throttle = 2000;
                         commandsBody = [{
                             component: "main",
                             capability: "switch", 
@@ -493,7 +200,6 @@
                             arguments: []
                         }];
                     } 
-                    // 3. LANCEMENT APP
                     else if (capability === "custom.launchapp") {
                         const appId = button.getAttribute('data-app-id');
                         description = "Lancement OQEE";
@@ -505,7 +211,6 @@
                             arguments: [appId]
                         }];
                     }
-                    // 4. COMMANDES STANDARDS (Volume, Channel, Media)
                     else {
                         description = command;
                         commandsBody = [{
@@ -522,10 +227,8 @@
                 });
             });
 
-            updateStatus("✅ Télécommande chargée (Mode Correctif: send command).");
+            updateStatus("✅ Télécommande prête (Version Finale).");
         });
     </script>
-
 </body>
 </html>
-
