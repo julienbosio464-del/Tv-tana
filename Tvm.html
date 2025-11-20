@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OQEE Remote - Numérotation Photo</title>
+    <title>Télécommande OQEE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { font-family: 'Inter', sans-serif; }
@@ -28,21 +28,21 @@
         .control-button:active { transform: scale(0.96); background-color: #374151; }
         
         /* Styles Spécifiques */
-        .app-launch-button-style { background-color: #2563EB; color: white; font-weight: 700; font-size: 1.2rem; height: 60px; border: none; }
+        .app-launch-button-style { background-color: #2563EB; color: white; font-weight: 700; font-size: 1.1rem; height: 50px; border: none; }
         .power-on-style { background-color: #059669; color: white; font-weight: 600; border: none; }
         .power-off-style { background-color: #DC2626; color: white; font-weight: 600; border: none; }
         
-        /* Navigation */
+        /* Navigation (Tout en bas) */
         .nav-grid { grid-template-areas: ". up ." "left ok right" ". down ."; width: 160px; height: 160px; margin: 0 auto; }
         .nav-btn { background-color: #374151; color: white; border: none; border-radius: 50%; }
         .nav-btn-ok { background-color: #4B5563; color: white; border: 2px solid #6B7280; border-radius: 50%; }
         
         /* Ronds & Media */
         .round-button { width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: #374151; }
-        .essential-button { background-color: #374151; color: #e5e7eb; font-size: 0.8rem; height: 45px; font-weight: 600; border-radius: 8px; }
+        .essential-button { background-color: #374151; color: #e5e7eb; font-size: 0.75rem; height: 40px; font-weight: 600; border-radius: 8px; }
 
-        /* --- GRILLE CHAINES (Style Sombre) --- */
-        .channel-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 20px; }
+        /* --- GRILLE CHAINES --- */
+        .channel-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 15px; }
         .channel-btn { 
             background-color: #ffffff; 
             height: 45px; 
@@ -51,12 +51,12 @@
             display: flex; 
             align-items: center; 
             justify-content: center;
-            padding: 4px;
+            padding: 2px;
             overflow: hidden;
         }
         .channel-btn img {
-            max-width: 90%;
-            max-height: 90%;
+            max-width: 95%;
+            max-height: 95%;
             object-fit: contain;
             pointer-events: none;
         }
@@ -75,111 +75,69 @@
     </style>
 </head>
 <body class="selection:bg-indigo-500">
-    <div id="app-container" class="control-card p-4 rounded-3xl">
+    <div id="app-container" class="control-card p-5 rounded-3xl">
         
-        <div class="flex items-center justify-center mb-4">
-             <h1 class="text-lg font-bold text-gray-200">OQEE Remote</h1>
-        </div>
-        
-        <div class="grid grid-cols-2 gap-3 mb-5">
+        <div class="flex justify-between items-center space-x-3 mb-6">
+            <button data-key="on" data-capability="switch" class="control-button power-on-style rounded-xl h-12 w-16 text-sm">ON</button>
+            
             <button id="launch-oqee-btn" data-app-id="znCs95n93Q.OqeeTV" data-capability="custom.launchapp" 
-                    class="col-span-2 control-button app-launch-button-style rounded-xl flex items-center justify-center">
-                <span>LANCER TV</span> 
+                    class="control-button app-launch-button-style rounded-xl flex-grow flex items-center justify-center">
+                <span>TV</span> 
             </button>
-            <button data-key="on" data-capability="switch" class="control-button power-on-style rounded-xl h-10 text-sm">ON</button>
-            <button data-key="off" data-capability="switch" class="control-button power-off-style rounded-xl h-10 text-sm">OFF</button>
+            
+            <button data-key="off" data-capability="switch" class="control-button power-off-style rounded-xl h-12 w-16 text-sm">OFF</button>
         </div>
 
-        <div class="mb-6">
+        <div class="mb-4">
             <div class="channel-grid">
-                <button class="control-button channel-btn" data-channel="1">
-                    <span class="channel-num">1</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/75/TF1_logo_2013.svg" referrerpolicy="no-referrer">
-                </button>
-                <button class="control-button channel-btn" data-channel="2">
-                    <span class="channel-num">2</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/23/France_2_%282018%29.svg" referrerpolicy="no-referrer">
-                </button>
-                <button class="control-button channel-btn" data-channel="3">
-                    <span class="channel-num">3</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/34/France_3_%282018%29.svg" referrerpolicy="no-referrer">
-                </button>
-                <button class="control-button channel-btn" data-channel="4">
-                    <span class="channel-num">4</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/35/France_4_%282018%29.svg" referrerpolicy="no-referrer">
-                </button>
+                <button class="control-button channel-btn" data-channel="1"><span class="channel-num">1</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/TF1_logo_2013.svg/100px-TF1_logo_2013.svg.png" alt="TF1"></button>
+                <button class="control-button channel-btn" data-channel="2"><span class="channel-num">2</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/France_2_%282018%29.svg/100px-France_2_%282018%29.svg.png" alt="FR2"></button>
+                <button class="control-button channel-btn" data-channel="3"><span class="channel-num">3</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/France_3_%282018%29.svg/100px-France_3_%282018%29.svg.png" alt="FR3"></button>
+                <button class="control-button channel-btn" data-channel="4"><span class="channel-num">4</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/France_4_%282018%29.svg/100px-France_4_%282018%29.svg.png" alt="FR4"></button>
                 
-                <button class="control-button channel-btn" data-channel="5">
-                    <span class="channel-num">5</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/22/France_5_%282018%29.svg" referrerpolicy="no-referrer">
-                </button>
-                <button class="control-button channel-btn" data-channel="6">
-                    <span class="channel-num">6</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/fr/a/ad/Logo_M6_2009.svg" referrerpolicy="no-referrer">
-                </button>
-                <button class="control-button channel-btn" data-channel="7">
-                    <span class="channel-num">7</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/03/Arte_Logo.svg" referrerpolicy="no-referrer">
-                </button>
-                <button class="control-button channel-btn" data-channel="8">
-                    <span class="channel-num">8</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/fr/3/30/LCP_2019.svg" referrerpolicy="no-referrer">
-                </button>
+                <button class="control-button channel-btn" data-channel="5"><span class="channel-num">5</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/France_5_%282018%29.svg/100px-France_5_%282018%29.svg.png" alt="FR5"></button>
+                <button class="control-button channel-btn" data-channel="6"><span class="channel-num">6</span><img src="https://upload.wikimedia.org/wikipedia/fr/thumb/a/ad/Logo_M6_2009.svg/100px-Logo_M6_2009.svg.png" alt="M6"></button>
+                <button class="control-button channel-btn" data-channel="7"><span class="channel-num">7</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Arte_Logo.svg/100px-Arte_Logo.svg.png" alt="Arte"></button>
+                <button class="control-button channel-btn" data-channel="8"><span class="channel-num">8</span><img src="https://upload.wikimedia.org/wikipedia/fr/thumb/3/30/LCP_2019.svg/100px-LCP_2019.svg.png" alt="LCP"></button>
                 
-                <button class="control-button channel-btn" data-channel="9">
-                    <span class="channel-num">9</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/W9_logo_2018.svg" referrerpolicy="no-referrer">
-                </button>
-                <button class="control-button channel-btn" data-channel="10">
-                    <span class="channel-num">10</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c7/TMC_Logo.svg" referrerpolicy="no-referrer">
-                </button>
-                <button class="control-button channel-btn" data-channel="11">
-                    <span class="channel-num">11</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e6/TFX_2018.svg" referrerpolicy="no-referrer">
-                </button>
-                <button class="control-button channel-btn" data-channel="12">
-                    <span class="channel-num">12</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/31/Gulli_2017.svg" referrerpolicy="no-referrer">
-                </button>
+                <button class="control-button channel-btn" data-channel="9"><span class="channel-num">9</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/W9_logo_2018.svg/100px-W9_logo_2018.svg.png" alt="W9"></button>
+                <button class="control-button channel-btn" data-channel="10"><span class="channel-num">10</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/TMC_Logo.svg/100px-TMC_Logo.svg.png" alt="TMC"></button>
+                <button class="control-button channel-btn" data-channel="11"><span class="channel-num">11</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/TFX_2018.svg/100px-TFX_2018.svg.png" alt="TFX"></button>
+                <button class="control-button channel-btn" data-channel="12"><span class="channel-num">12</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Gulli_2017.svg/100px-Gulli_2017.svg.png" alt="Gulli"></button>
                 
-                <button class="control-button channel-btn" data-channel="13">
-                    <span class="channel-num">13</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/BFM_TV_2019.svg" referrerpolicy="no-referrer">
-                </button>
-                <button class="control-button channel-btn" data-channel="14">
-                    <span class="channel-num">14</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/31/CNews_Logo.svg" referrerpolicy="no-referrer">
-                </button>
-                <button class="control-button channel-btn" data-channel="15">
-                    <span class="channel-num">15</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4d/Logo_LCI_2017.svg" referrerpolicy="no-referrer">
-                </button>
-                <button class="control-button channel-btn" data-channel="16">
-                    <span class="channel-num">16</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0e/Franceinfo_-_2016.svg" referrerpolicy="no-referrer">
-                </button>
+                <button class="control-button channel-btn" data-channel="13"><span class="channel-num">13</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/BFM_TV_2019.svg/100px-BFM_TV_2019.svg.png" alt="BFM"></button>
+                <button class="control-button channel-btn" data-channel="14"><span class="channel-num">14</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/CNews_Logo.svg/100px-CNews_Logo.svg.png" alt="CNEWS"></button>
+                <button class="control-button channel-btn" data-channel="15"><span class="channel-num">15</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Logo_LCI_2017.svg/100px-Logo_LCI_2017.svg.png" alt="LCI"></button>
+                <button class="control-button channel-btn" data-channel="16"><span class="channel-num">16</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Franceinfo_-_2016.svg/100px-Franceinfo_-_2016.svg.png" alt="Info"></button>
 
-                <button class="control-button channel-btn" data-channel="17">
-                    <span class="channel-num">17</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/54/CStar_Logo.svg" referrerpolicy="no-referrer">
-                </button>
-                 <button class="control-button channel-btn" data-channel="20">
-                    <span class="channel-num">20</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/TF1_Series_Films_2018.svg" referrerpolicy="no-referrer">
-                </button>
-                 <button class="control-button channel-btn" data-channel="21">
-                    <span class="channel-num">21</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/32/L%27%C3%89quipe_logo.svg" referrerpolicy="no-referrer">
-                </button>
-                <button class="control-button channel-btn" data-channel="40">
-                    <span class="channel-num">40</span>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Canal%2B_logo_2016.svg" referrerpolicy="no-referrer">
-                </button>
+                <button class="control-button channel-btn" data-channel="17"><span class="channel-num">17</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/CStar_Logo.svg/100px-CStar_Logo.svg.png" alt="CStar"></button>
+                 <button class="control-button channel-btn" data-channel="20"><span class="channel-num">20</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/TF1_Series_Films_2018.svg/100px-TF1_Series_Films_2018.svg.png" alt="TF1SF"></button>
+                 <button class="control-button channel-btn" data-channel="21"><span class="channel-num">21</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/L%27%C3%89quipe_logo.svg/100px-L%27%C3%89quipe_logo.svg.png" alt="Equipe"></button>
+                 <button class="control-button channel-btn" data-channel="40"><span class="channel-num">40</span><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Canal%2B_logo_2016.svg/100px-Canal%2B_logo_2016.svg.png" alt="C+"></button>
             </div>
         </div>
 
-        <div class="flex justify-center mb-6">
+        <div class="flex justify-between items-center space-x-2 mb-6 bg-gray-800 p-3 rounded-2xl">
+            <div class="flex flex-col space-y-2">
+                <button data-command="volumeUp" data-capability="audioVolume" class="control-button round-button shadow-sm font-bold text-xl">+</button>
+                <button data-command="volumeDown" data-capability="audioVolume" class="control-button round-button shadow-sm font-bold text-xl">-</button>
+             </div>
+             
+             <div class="flex flex-col justify-between h-full space-y-2 w-full">
+                 <button data-command="mute" data-capability="audioMute" class="w-full control-button essential-button h-12">MUTE</button>
+                 <div class="flex space-x-1">
+                     <button data-command="play" data-capability="mediaPlayback" class="flex-1 control-button essential-button text-xs">PLAY</button>
+                     <button data-command="pause" data-capability="mediaPlayback" class="flex-1 control-button essential-button text-xs">PAUSE</button>
+                 </div>
+             </div>
+
+             <div class="flex flex-col space-y-2">
+                 <button data-command="channelUp" data-capability="tvChannel" class="control-button round-button bg-blue-600 text-white border-none shadow-sm font-bold">P+</button>
+                 <button data-command="channelDown" data-capability="tvChannel" class="control-button round-button bg-blue-600 text-white border-none shadow-sm font-bold">P-</button>
+             </div>
+        </div>
+
+        <div class="flex justify-center mb-2">
             <div class="nav-grid grid grid-cols-3 gap-2 p-2 rounded-2xl">
                 <button data-key-code="UP" data-capability="samsungvd.remoteControl" class="control-button nav-btn rounded-full h-10 w-10 mx-auto" style="grid-area: up;"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mx-auto" viewBox="0 0 24 24" fill="currentColor"><path d="M7 14l5-5 5 5z"/></svg></button>
                 <button data-key-code="LEFT" data-capability="samsungvd.remoteControl" class="control-button nav-btn rounded-full h-10 w-10 mx-auto" style="grid-area: left;"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mx-auto" viewBox="0 0 24 24" fill="currentColor"><path d="M14 7l-5 5 5 5z"/></svg></button>
@@ -189,25 +147,7 @@
             </div>
         </div>
 
-        <div class="flex justify-between items-center space-x-2">
-            <div class="flex flex-col space-y-2">
-                <button data-command="volumeUp" data-capability="audioVolume" class="control-button round-button shadow-sm font-bold text-xl">+</button>
-                <button data-command="volumeDown" data-capability="audioVolume" class="control-button round-button shadow-sm font-bold text-xl">-</button>
-             </div>
-             
-             <div class="grid grid-cols-2 gap-2">
-                 <button data-command="mute" data-capability="audioMute" class="col-span-2 control-button essential-button">MUTE</button>
-                 <button data-command="play" data-capability="mediaPlayback" class="control-button essential-button text-xs">PLAY</button>
-                 <button data-command="pause" data-capability="mediaPlayback" class="control-button essential-button text-xs">PAUSE</button>
-             </div>
-
-             <div class="flex flex-col space-y-2">
-                 <button data-command="channelUp" data-capability="tvChannel" class="control-button round-button bg-blue-600 text-white shadow-sm font-bold">P+</button>
-                 <button data-command="channelDown" data-capability="tvChannel" class="control-button round-button bg-blue-600 text-white shadow-sm font-bold">P-</button>
-             </div>
-        </div>
-
-        <div id="status-message" class="text-gray-500 text-xs text-center mt-4 h-4">Prêt</div>
+        <div id="status-message" class="text-gray-500 text-xs text-center mt-2 h-4">Prêt</div>
     </div>
 
     <script>
@@ -215,7 +155,6 @@
             const statusMessage = document.getElementById('status-message');
             const controlButtons = document.querySelectorAll('.control-button');
 
-            // --- JETON E0D3 (Conservé) ---
             const SMARTTHINGS_TOKEN = "e0d3e9e3-8cb6-4262-b867-11496b450832"; 
             const TV_DEVICE_ID = "a446a209-f9d7-7972-e908-a1a41eb7f093"; 
             const COMMAND_API_URL = `https://api.smartthings.com/v1/devices/${TV_DEVICE_ID}/commands`;
@@ -277,7 +216,6 @@
                     let commandsBody = [];
                     let throttle = 300; 
 
-                    // GESTION CHAINES (LOGIQUE ENVOI CHIFFRES)
                     if (channelNum) {
                         const digits = channelNum.split('');
                         digits.forEach(digit => {
