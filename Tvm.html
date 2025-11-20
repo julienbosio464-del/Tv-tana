@@ -3,62 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Télécommande OQEE TV (V5 - Jeton E0D3)</title>
+    <title>Télécommande OQEE TV (V6 - Chaînes)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { font-family: 'Inter', sans-serif; }
         body { background-color: #eef2f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 16px; }
-        .control-card { background: linear-gradient(145deg, #ffffff, #f0f4f8); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15), 0 5px 15px rgba(0, 0, 0, 0.05); max-width: 400px; }
+        .control-card { background: linear-gradient(145deg, #ffffff, #f0f4f8); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15), 0 5px 15px rgba(0, 0, 0, 0.05); max-width: 420px; width: 100%; }
         .control-button { transition: all 0.15s ease-in-out; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06); border: 1px solid #d1d5db; }
         .control-button:active { transform: translateY(1px); box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1); }
         
-        /* STYLE : Boutons Spécifiques */
+        /* STYLES EXISTANTS */
         .app-launch-button-style { background-color: #3B82F6; color: white; font-weight: 700; font-size: 1.5rem; height: 70px; box-shadow: 0 6px 15px -3px rgba(59, 130, 246, 0.4); letter-spacing: 0.05em; }
         .app-launch-button-style:active { background-color: #2563EB; }
         .power-on-style { background-color: #10B981; color: white; font-weight: 600; }
         .power-off-style { background-color: #EF4444; color: white; font-weight: 600; }
-
-        /* STYLE : Pavé de Navigation */
-        .nav-grid { grid-template-areas: ". up ." "left ok right" ". down ."; width: 200px; height: 200px; }
+        .nav-grid { grid-template-areas: ". up ." "left ok right" ". down ."; width: 200px; height: 200px; margin: 0 auto; }
         .nav-btn { background-color: #4f46e5; color: white; font-size: 1.25rem; border: none; }
         .nav-btn:active { background-color: #4338ca; }
         .nav-btn-ok { background-color: #10b981; }
         .nav-btn-ok:active { background-color: #059669; }
-        
-        /* STYLE : Ronds & Média */
-        .round-button { width: 70px; height: 70px; border-radius: 9999px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 4px; }
+        .round-button { width: 60px; height: 60px; border-radius: 9999px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .volume-button { background-color: #fcd34d; color: #4b5563; font-weight: bold; }
         .volume-button:active { background-color: #fbbf24; }
-        .essential-button { background-color: #ffffff; color: #374151; font-size: 1.1rem; height: 60px; padding: 8px 0; }
-        .essential-button:active { background-color: #f3f4f6; }
+        .essential-button { background-color: #ffffff; color: #374151; font-size: 1rem; height: 50px; }
+        
+        /* NOUVEAU STYLE : Boutons Chaînes */
+        .channel-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 20px; }
+        .channel-btn { 
+            background-color: #fff; 
+            color: #1f2937; 
+            font-size: 0.8rem; 
+            font-weight: 600; 
+            height: 50px; 
+            border-radius: 12px;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            border: 1px solid #e5e7eb;
+        }
+        .channel-btn span.num { font-size: 0.9rem; color: #3B82F6; font-weight: 800; }
+        .channel-btn span.name { font-size: 0.65rem; color: #6b7280; text-transform: uppercase; }
+        .channel-btn:active { background-color: #eff6ff; border-color: #3B82F6; }
+
         .loading { cursor: not-allowed; opacity: 0.6; pointer-events: none; }
     </style>
 </head>
 <body class="selection:bg-indigo-200">
-    <div id="app-container" class="w-full control-card p-6 rounded-3xl border border-gray-200">
+    <div id="app-container" class="control-card p-6 rounded-3xl border border-gray-200">
         
-        <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">Télécommande OQEE TV</h1>
+        <h1 class="text-2xl font-bold text-center mb-6 text-gray-800">Télécommande OQEE</h1>
         
-        <div class="flex flex-col space-y-4 mb-8">
+        <div class="flex flex-col space-y-4 mb-6">
             <button id="launch-oqee-btn" data-app-id="znCs95n93Q.OqeeTV" data-capability="custom.launchapp" 
                     class="control-button app-launch-button-style w-full rounded-2xl flex items-center justify-center">
                 <span>LANCER OQEE TV</span> 
             </button>
             
             <div class="flex justify-between space-x-4">
-                <button data-key="on" data-capability="switch" class="control-button power-on-style w-1/2 rounded-2xl flex items-center justify-center space-x-2">
-                    <span>ALLUMER</span>
-                </button>
-                <button data-key="off" data-capability="switch" class="control-button power-off-style w-1/2 rounded-2xl flex items-center justify-center space-x-2">
-                    <span>ÉTEINDRE</span>
-                </button>
+                <button data-key="on" data-capability="switch" class="control-button power-on-style w-1/2 rounded-2xl flex items-center justify-center h-12">ALLUMER</button>
+                <button data-key="off" data-capability="switch" class="control-button power-off-style w-1/2 rounded-2xl flex items-center justify-center h-12">ÉTEINDRE</button>
             </div>
         </div>
 
-        <div class="flex justify-center mb-8">
-            <div class="nav-grid grid grid-cols-3 gap-2 p-4 bg-gray-200 rounded-2xl shadow-inner border border-gray-300">
+        <div class="mb-6">
+            <p class="text-xs font-bold text-gray-400 mb-2 uppercase tracking-wider text-center">Accès Rapide Chaînes</p>
+            <div class="channel-grid">
+                <button class="control-button channel-btn" data-channel="1"><span class="num">1</span><span class="name">TF1</span></button>
+                <button class="control-button channel-btn" data-channel="2"><span class="num">2</span><span class="name">FR 2</span></button>
+                <button class="control-button channel-btn" data-channel="3"><span class="num">3</span><span class="name">FR 3</span></button>
+                <button class="control-button channel-btn" data-channel="4"><span class="num">4</span><span class="name">CANAL+</span></button>
+                
+                <button class="control-button channel-btn" data-channel="5"><span class="num">5</span><span class="name">FR 5</span></button>
+                <button class="control-button channel-btn" data-channel="6"><span class="num">6</span><span class="name">M6</span></button>
+                <button class="control-button channel-btn" data-channel="7"><span class="num">7</span><span class="name">ARTE</span></button>
+                <button class="control-button channel-btn" data-channel="8"><span class="num">8</span><span class="name">C8</span></button>
+                
+                <button class="control-button channel-btn" data-channel="9"><span class="num">9</span><span class="name">W9</span></button>
+                <button class="control-button channel-btn" data-channel="10"><span class="num">10</span><span class="name">TMC</span></button>
+                <button class="control-button channel-btn" data-channel="11"><span class="num">11</span><span class="name">TFX</span></button>
+                <button class="control-button channel-btn" data-channel="12"><span class="num">12</span><span class="name">NRJ12</span></button>
+                
+                <button class="control-button channel-btn" data-channel="13"><span class="num">13</span><span class="name">LCP</span></button>
+                <button class="control-button channel-btn" data-channel="14"><span class="num">14</span><span class="name">FR 4</span></button>
+                <button class="control-button channel-btn" data-channel="15"><span class="num">15</span><span class="name">BFM</span></button>
+                <button class="control-button channel-btn" data-channel="16"><span class="num">16</span><span class="name">CNEWS</span></button>
+                
+                <button class="control-button channel-btn" data-channel="17"><span class="num">17</span><span class="name">CSTAR</span></button>
+                <button class="control-button channel-btn" data-channel="18"><span class="num">18</span><span class="name">GULLI</span></button>
+                <button class="control-button channel-btn" data-channel="19"><span class="num">19</span><span class="name">TF1 SF</span></button>
+                <button class="control-button channel-btn" data-channel="20"><span class="num">20</span><span class="name">L'ÉQUIPE</span></button>
+            </div>
+        </div>
+
+        <div class="flex justify-center mb-6">
+            <div class="nav-grid grid grid-cols-3 gap-2 p-3 bg-gray-200 rounded-2xl shadow-inner border border-gray-300">
                 <button data-key-code="UP" data-capability="samsungvd.remoteControl" class="control-button nav-btn rounded-full h-12 w-12" style="grid-area: up;">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto" viewBox="0 0 24 24" fill="currentColor"><path d="M7 14l5-5 5 5z"/></svg>
+                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto" viewBox="0 0 24 24" fill="currentColor"><path d="M7 14l5-5 5 5z"/></svg>
                 </button>
                 <button data-key-code="LEFT" data-capability="samsungvd.remoteControl" class="control-button nav-btn rounded-full h-12 w-12" style="grid-area: left;">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto" viewBox="0 0 24 24" fill="currentColor"><path d="M14 7l-5 5 5 5z"/></svg>
@@ -73,31 +114,31 @@
             </div>
         </div>
 
-        <div class="flex justify-around items-center mb-8 bg-white p-4 rounded-xl shadow-inner border border-gray-100">
-            <div class="flex flex-col space-y-2 items-center">
-                <span class="text-xs font-semibold text-gray-500">VOL</span>
-                <button data-command="volumeUp" data-capability="audioVolume" class="control-button volume-button round-button w-[60px] h-[60px]"><span class="text-xl font-black">+</span></button>
-                <button data-command="volumeDown" data-capability="audioVolume" class="control-button volume-button round-button w-[60px] h-[60px]"><span class="text-xl font-black">-</span></button>
+        <div class="flex justify-around items-center mb-6 bg-white p-3 rounded-xl shadow-inner border border-gray-100">
+            <div class="flex flex-col space-y-1 items-center">
+                <span class="text-[10px] font-bold text-gray-400">VOL</span>
+                <button data-command="volumeUp" data-capability="audioVolume" class="control-button volume-button round-button"><span class="text-xl font-black">+</span></button>
+                <button data-command="volumeDown" data-capability="audioVolume" class="control-button volume-button round-button"><span class="text-xl font-black">-</span></button>
             </div>
-            <div class="flex flex-col space-y-2 items-center">
-                <span class="text-xs font-semibold text-gray-500">MUTE</span>
-                <button data-command="mute" data-capability="audioMute" class="control-button essential-button rounded-full w-[80px] h-[80px] flex items-center justify-center bg-gray-200 hover:bg-gray-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-700" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .9-.22 1.74-.63 2.5l1.63 1.63c.66-1.09 1.05-2.35 1.05-3.63 0-4.31-3.52-7.9-7.84-7.9-.55 0-1.07.09-1.57.24l2.12 2.12c.31-.05.63-.08.95-.08 2.07 0 3.75 1.68 3.75 3.75zm-9.98 0l-4.42-4.42-1.41 1.41L5 12l-1.41 1.41 1.41 1.41 4.42-4.42zM5 12h2v.5h-2z"/></svg>
+            <div class="flex flex-col space-y-1 items-center justify-center">
+                <span class="text-[10px] font-bold text-gray-400">MUTE</span>
+                <button data-command="mute" data-capability="audioMute" class="control-button essential-button rounded-full w-[60px] h-[60px] flex items-center justify-center bg-gray-200 hover:bg-gray-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .9-.22 1.74-.63 2.5l1.63 1.63c.66-1.09 1.05-2.35 1.05-3.63 0-4.31-3.52-7.9-7.84-7.9-.55 0-1.07.09-1.57.24l2.12 2.12c.31-.05.63-.08.95-.08 2.07 0 3.75 1.68 3.75 3.75zm-9.98 0l-4.42-4.42-1.41 1.41L5 12l-1.41 1.41 1.41 1.41 4.42-4.42zM5 12h2v.5h-2z"/></svg>
                 </button>
             </div>
-            <div class="flex flex-col space-y-2 items-center">
-                <span class="text-xs font-semibold text-gray-500">CH</span>
+            <div class="flex flex-col space-y-1 items-center">
+                <span class="text-[10px] font-bold text-gray-400">CH</span>
                  <button data-command="channelUp" data-capability="tvChannel" class="control-button app-launch-button-style round-button w-[60px] h-[60px] bg-green-500 hover:bg-green-600"><span class="text-xl font-black">P+</span></button>
                  <button data-command="channelDown" data-capability="tvChannel" class="control-button app-launch-button-style round-button w-[60px] h-[60px] bg-green-500 hover:bg-green-600"><span class="text-xl font-black">P-</span></button>
             </div>
         </div>
 
-        <div class="mt-8 p-4 bg-gray-100 rounded-xl border border-gray-200">
+        <div class="mt-4 p-3 bg-gray-100 rounded-xl border border-gray-200">
             <div class="flex justify-between items-center space-x-2">
-                <button data-command="rewind" data-capability="mediaPlayback" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center h-12 bg-white">REW</button>
-                <button data-command="play" data-capability="mediaPlayback" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center h-12 bg-white">PLAY</button>
-                <button data-command="pause" data-capability="mediaPlayback" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center h-12 bg-white">PAUSE</button>
-                <button data-command="fastForward" data-capability="mediaPlayback" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center h-12 bg-white">FF</button>
+                <button data-command="rewind" data-capability="mediaPlayback" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">REW</button>
+                <button data-command="play" data-capability="mediaPlayback" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">PLAY</button>
+                <button data-command="pause" data-capability="mediaPlayback" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">PAUSE</button>
+                <button data-command="fastForward" data-capability="mediaPlayback" class="control-button essential-button flex-1 rounded-xl flex items-center justify-center">FF</button>
             </div>
         </div>
 
@@ -111,7 +152,7 @@
             const statusMessage = document.getElementById('status-message');
             const controlButtons = document.querySelectorAll('.control-button');
 
-            // --- CONFIGURATION MISE A JOUR ---
+            // --- JETON MIS A JOUR ---
             const SMARTTHINGS_TOKEN = "e0d3e9e3-8cb6-4262-b867-11496b450832"; 
             const TV_DEVICE_ID = "a446a209-f9d7-7972-e908-a1a41eb7f093"; 
             const COMMAND_API_URL = `https://api.smartthings.com/v1/devices/${TV_DEVICE_ID}/commands`;
@@ -176,12 +217,32 @@
                     const capability = button.getAttribute('data-capability');
                     const keyName = button.getAttribute('data-key'); 
                     const keyCode = button.getAttribute('data-key-code');
+                    const channelNum = button.getAttribute('data-channel'); // Pour les boutons chaines
                     
                     let commandsBody = [];
                     let description = "";
                     let throttle = 300; 
 
-                    if (capability === "samsungvd.remoteControl") {
+                    // 1. GESTION DES CHAÎNES (1 à 20)
+                    if (channelNum) {
+                        description = `Chaîne ${channelNum}`;
+                        // On décompose le numéro (ex: "12" devient "1" puis "2")
+                        const digits = channelNum.split('');
+                        
+                        // Pour chaque chiffre, on crée une commande "send"
+                        digits.forEach(digit => {
+                            commandsBody.push({
+                                component: "main",
+                                capability: "samsungvd.remoteControl",
+                                command: "send",
+                                arguments: [digit] // La TV accepte "1", "2", etc.
+                            });
+                        });
+                        // Un peu plus de délai pour laisser le temps à la TV de digérer la séquence
+                        throttle = 600;
+                    }
+                    // 2. NAVIGATION
+                    else if (capability === "samsungvd.remoteControl") {
                         description = `Touche ${keyCode}`;
                         commandsBody = [{
                             component: "main",
@@ -190,6 +251,7 @@
                             arguments: [keyCode] 
                         }];
                     } 
+                    // 3. ON / OFF
                     else if (capability === "switch") {
                         description = (keyName === 'on' ? "Allumer" : "Éteindre");
                         throttle = 2000;
@@ -200,6 +262,7 @@
                             arguments: []
                         }];
                     } 
+                    // 4. LANCEMENT APP
                     else if (capability === "custom.launchapp") {
                         const appId = button.getAttribute('data-app-id');
                         description = "Lancement OQEE";
@@ -211,7 +274,8 @@
                             arguments: [appId]
                         }];
                     }
-                    else {
+                    // 5. COMMANDES SIMPLES
+                    else if (capability) {
                         description = command;
                         commandsBody = [{
                             component: "main",
@@ -227,7 +291,7 @@
                 });
             });
 
-            updateStatus("✅ Télécommande prête (Jeton mis à jour : e0d3).");
+            updateStatus("✅ Télécommande prête (avec chaînes 1-20).");
         });
     </script>
 </body>
